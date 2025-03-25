@@ -1,0 +1,129 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-100 clsbg">
+  <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl w-full">
+    
+    <div class="w-full md:w-1/2 p-8">
+      <h2 class="text-3xl font-bold text-emerald-green mb-6 text-center md:text-left">Get Started Now</h2>
+      
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Select User Type:</label>
+          <div class="flex space-x-4">
+            <label class="flex items-center space-x-2">
+              <input 
+                type="radio" 
+                formControlName="userType" 
+                value="Patient" 
+                class="text-emerald-green focus:ring-emerald-green"
+              /> 
+              <span>Patient</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input 
+                type="radio" 
+                formControlName="userType" 
+                value="Doctor" 
+                class="text-emerald-green focus:ring-emerald-green"
+              /> 
+              <span>Doctor</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <input 
+            type="text" 
+            formControlName="name" 
+            placeholder="Enter your name"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+          />
+          @if (signUpForm.get('name')?.touched && signUpForm.get('name')?.invalid) {
+            <div class="text-red-500 text-sm mt-1">
+              Name is required and must contain only letters.
+            </div>
+          }
+        </div>
+
+        <div>
+          <input 
+            type="email" 
+            formControlName="email" 
+            placeholder="Enter your email"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+          />
+          @if (signUpForm.get('email')?.touched && signUpForm.get('email')?.invalid) {
+            <div class="text-red-500 text-sm mt-1">
+              Valid email is required.
+            </div>
+          }
+        </div>
+
+        <div>
+          <input 
+            type="text" 
+            formControlName="phone" 
+            placeholder="Enter your phone number"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+          />
+          @if (signUpForm.get('phone')?.touched && signUpForm.get('phone')?.invalid) {
+            <div class="text-red-500 text-sm mt-1">
+              Phone number must be exactly 10 digits.
+            </div>
+          }
+        </div>
+
+        <div>
+          <input 
+            type="password" 
+            formControlName="password" 
+            placeholder="Password"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+          />
+          @if (signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid) {
+            <div class="text-red-500 text-sm mt-1">
+              Password must be 8-20 characters, include upper, lower, number, and special character.
+            </div>
+          }
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" formControlName="terms" class="h-4 w-4 text-emerald-green focus:ring-emerald-green" />
+          <label for="terms" class="text-sm text-gray-600">I agree to the terms & policy</label>
+        </div>
+        @if (signUpForm.get('terms')?.touched && signUpForm.get('terms')?.invalid) {
+          <div class="text-red-500 text-sm mt-1">
+            You must agree to the terms and policy.
+          </div>
+        }
+
+        <button 
+          type="submit"
+          class="w-full py-2 bg-navy-blue text-white rounded-lg hover:bg-emerald-green transition duration-300"
+        >
+          Signup
+        </button>
+      </form>
+
+      <div class="flex items-center my-6">
+        <hr class="flex-grow border-gray-300" />
+        <span class="mx-3 text-gray-400">or</span>
+        <hr class="flex-grow border-gray-300" />
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+        <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100"> 
+          <i class="fab fa-google mr-2"></i> Sign in with Google
+        </button>
+        <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+          <i class="fab fa-apple mr-2"></i> Sign in with Apple
+        </button>
+      </div>
+
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">Have an account? <a routerLink="/auth/login" class="text-emerald-green">Sign In</a></p>
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/2 h-64 md:h-auto bg-cover bg-center rounded-l-xl" style="background-image: url('doctor2.jpeg');">
+    </div>
+  </div>
+</div>

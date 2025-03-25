@@ -1,0 +1,67 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-100 clsbg">
+    <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl w-full">
+      
+      <div class="w-full md:w-1/2 p-8">
+        <h2 class="text-3xl font-bold text-emerald-green mb-2 text-center md:text-left">Welcome back!</h2>
+        <p class="text-gray-500 mb-6 text-center md:text-left">Enter your Credentials to access your account</p>
+        
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <input 
+              type="email" 
+              formControlName="email" 
+              placeholder="Enter your email"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+            />
+          </div>
+  
+          <div>
+            <input 
+              type="password" 
+              formControlName="password" 
+              placeholder="Password"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+            />
+          </div>
+  
+          <div class="flex justify-between items-center text-sm text-gray-500">
+            <div>
+              <input type="checkbox" formControlName="rememberMe" class="mr-1 h-4 w-4 text-emerald-green focus:ring-emerald-green"/>
+              Remember for 30 days
+            </div>
+            <a href="#" class="text-emerald-green hover:underline">Forgot password?</a>
+          </div>
+  
+          <button 
+            type="submit"
+            class="w-full py-2 bg-navy-blue text-white rounded-lg hover:bg-emerald-green transition duration-300"
+          >
+            Login
+          </button>
+        </form>
+  
+        <div class="flex items-center my-6">
+          <hr class="flex-grow border-gray-300" />
+          <span class="mx-3 text-gray-400">or</span>
+          <hr class="flex-grow border-gray-300" />
+        </div>
+  
+        <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+          <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100"> 
+            <i class="fab fa-google mr-2"></i> Sign in with Google
+          </button>
+          <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+            <i class="fab fa-apple mr-2"></i> Sign in with Apple
+          </button>
+        </div>
+  
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">Don't have an account? <a routerLink="/auth/signup" class="text-emerald-green">Sign Up</a></p>
+        </div>
+      </div>
+  
+      <div class="w-full md:w-1/2 h-64 md:h-auto bg-cover bg-center rounded-l-xl" style="background-image: url('doctor.jpeg');">
+      </div>
+    </div>
+  </div>
+  
