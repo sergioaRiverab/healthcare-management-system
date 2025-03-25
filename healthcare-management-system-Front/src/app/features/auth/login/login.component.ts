@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule} from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink,Router  } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import  {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private authService: AuthService,private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
@@ -23,10 +24,23 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Form Data:', this.loginForm.value);
+      const formData = this.loginForm.value;
+      formData.email = formData.email.toLowerCase(); 
+  
+      this.authService.login(formData.email, formData.password).subscribe({
+        next: () => {
+          alert('Inicio de sesión exitoso');
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err: Error) => {
+          console.error('Error en el inicio de sesión:', err.message);
+          alert(err.message); 
+        }
+      });
     }
   }
+  
 
 }

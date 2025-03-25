@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import  {AuthService} from '../../../core/services/auth.service';
+
 
 
 
@@ -14,7 +17,7 @@ import { RouterLink } from '@angular/router';
 export class SignupComponent {
   signUpForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private router: Router, private authService: AuthService,) {
     this.signUpForm = this.fb.group({
       userType: ['Patient', Validators.required],
       name: ['', [Validators.required,Validators.pattern('^[a-zA-Z ]*$')]],
@@ -28,13 +31,31 @@ export class SignupComponent {
     });
   }
 
-  onSubmit():void {
+  onSubmit(): void {
     if (this.signUpForm.valid) {
-      console.log('Form Data:', this.signUpForm.value);
-    }else{
+      const formData = this.signUpForm.value;
+      formData.email = formData.email.toLowerCase();
+      formData.phone = formData.phone.toString(); 
+
+      this.authService.register({
+        username: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.userType,
+        phone: formData.phone
+      }).subscribe({
+        next: () => {
+          alert('Registro exitoso');
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          console.error('Error en el registro:', err);
+          alert('Error en el registro');
+        }
+      });
+    } else {
       alert('Formulario inválido');
     }
   }
-
 
 }
