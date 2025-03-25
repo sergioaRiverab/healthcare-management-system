@@ -31,7 +31,8 @@ export class AuthService {
       await this.prisma.doctor.create({
         data: {
           name: signupDto.username,
-          phone: signupDto.phone?.toString(),
+          specialty: "", 
+          phone: signupDto.phone ? signupDto.phone.toString() : '',
           schedule: "", 
           userId: user.id
         }
@@ -40,7 +41,8 @@ export class AuthService {
       await this.prisma.patient.create({
         data: {
           name: signupDto.username,
-          phone: signupDto.phone,
+          phone: signupDto.phone ? signupDto.phone : '',
+          dob: new Date(),
           address: "", 
           medicalHistory: "", 
           userId: user.id
