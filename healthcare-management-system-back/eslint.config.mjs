@@ -32,4 +32,20 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'warn'
     },
   },
+  {
+    'prettier/prettier': [
+      'error',
+      {
+        "endOfline":"auto",
+        singleQuote: true,
+        useTabs: false,
+        tabWidth: 2,
+        semi: true,
+        trailingComma: 'es5',
+        bracketSpacing: true,
+        jsxBracketSameLine: false,
+        printWidth: 100,
+      },
+    ],
+  }
 );
