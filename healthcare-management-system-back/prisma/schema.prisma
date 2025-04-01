@@ -29,21 +29,19 @@ model User {
 }
 model Patient {
   id             Int     @id @default(autoincrement())
-  name           String
   dob            DateTime
-  phone          String
   address        String
   medicalHistory String
   userId         Int     @unique
   user           User    @relation(fields: [userId], references: [id])
 }
 
+
 model Doctor {
   id        Int     @id @default(autoincrement())
-  name      String
   specialty String
-  phone     String
   schedule  String
   userId    Int     @unique
   user      User    @relation(fields: [userId], references: [id])
 }
+

@@ -9,9 +9,17 @@ import { DoctorModule } from './doctor/doctor.module';
 import { PatientModule } from './patient/patient.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
-  imports: [AuthModule, UserModule, DoctorModule, PatientModule, PrismaModule],
+  imports: [AuthModule,
+    UserModule, 
+    DoctorModule,
+    PatientModule, 
+    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true })
+  ],
   controllers: [UserController],
   providers: [AppService, UserService, DoctorService, PrismaService],
 })
