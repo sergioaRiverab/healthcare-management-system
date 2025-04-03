@@ -112,4 +112,18 @@ export class AuthService {
   getUserRole(): string | null {
     return this.userSubject.value?.role || null;
   }
+
+  resetPassword(data: { email: string; newPassword: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data, { 
+      withCredentials: true 
+    }).pipe(
+      catchError((error) => {
+        let errorMessage = 'Error al restablecer la contraseña.';
+        if (error.error && typeof error.error.message === 'string') {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
 }

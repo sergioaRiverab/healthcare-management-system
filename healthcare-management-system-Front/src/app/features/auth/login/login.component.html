@@ -32,7 +32,7 @@
 
           <div class="flex justify-center space-x-6 mt-2">
             <a href="#" class="text-emerald-green hover:underline" (click)="openChangePasswordModal($event)">Change password</a>
-            <a href="#" class="text-emerald-green hover:underline">Reset password</a>
+            <a href="#" class="text-emerald-green hover:underline" (click)="openResetPasswordModal($event)">Reset password</a>
           </div>
         </div>
 
@@ -117,6 +117,62 @@
           class="w-32 py-2 bg-emerald-green text-white rounded-lg active:bg-navy-blue transition duration-300"
           [disabled]="changePasswordForm.invalid"
           [class.opacity-50]="changePasswordForm.invalid"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for Reset Password -->
+<div *ngIf="isResetPasswordModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-[480px]">
+    <h2 class="text-3xl font-bold text-emerald-green mb-2">Reset Password</h2>
+    <p class="text-gray-500 mb-6">Enter your email and new password</p>
+    
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()" class="space-y-4">
+      <div>
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Enter your email"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+        />
+        @if (resetPasswordForm.get('email')?.touched && resetPasswordForm.get('email')?.invalid) {
+          <div class="text-red-500 text-sm mt-1">
+            Please enter a valid email address.
+          </div>
+        }
+      </div>
+
+      <div>
+        <input 
+          type="password" 
+          formControlName="newPassword" 
+          placeholder="Enter your new password"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green"
+        />
+        @if (resetPasswordForm.get('newPassword')?.touched && resetPasswordForm.get('newPassword')?.invalid) {
+          <div class="text-red-500 text-sm mt-1">
+            Password must be 8-20 characters, include upper, lower, number, and special character.
+          </div>
+        }
+      </div>
+
+      <div class="flex justify-center space-x-4 mt-6">
+        <button 
+          type="button" 
+          class="w-32 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300" 
+          (click)="closeResetPasswordModal()"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="w-32 py-2 bg-emerald-green text-white rounded-lg active:bg-navy-blue transition duration-300"
+          [disabled]="resetPasswordForm.invalid"
+          [class.opacity-50]="resetPasswordForm.invalid"
         >
           Submit
         </button>
