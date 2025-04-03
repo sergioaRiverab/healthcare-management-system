@@ -78,6 +78,8 @@ export class AuthController {
     @Req() req: Request,
     @Body() changePasswordDto: ChangePasswordDto
   ) {
+    console.log('Authenticated User:', req.user); // Log authenticated user
+    console.log('Change Password Request Body:', changePasswordDto); // Log request body
     const userPayload = req.user as JwtPayload;
     const userId = userPayload.sub;
     return this.authService.changePassword(userId, changePasswordDto);
