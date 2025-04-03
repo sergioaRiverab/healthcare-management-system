@@ -1,0 +1,53 @@
+<div class="relative">
+  <!-- User Icon Button -->
+  <button 
+    (click)="toggleDropdown()"
+    class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-green text-white hover:bg-navy-blue transition duration-300"
+  >
+    <i class="fas fa-user"></i>
+  </button>
+
+  <!-- Dropdown Card -->
+  @if (isDropdownOpen) {
+    <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg overflow-hidden">
+      @if (user) {
+        <div class="p-4">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-green flex items-center justify-center">
+              <i class="fas fa-user text-white text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800">{{ user.username }}</h3>
+              <p class="text-sm text-gray-500">{{ user.email }}</p>
+            </div>
+          </div>
+          
+          <div class="border-t border-gray-200 pt-3">
+            <div class="flex items-center space-x-2 text-sm text-gray-600 mb-2">
+              <i class="fas fa-user-tag w-5"></i>
+              <span>{{ user.role }}</span>
+            </div>
+            @if (user.phone) {
+              <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <i class="fas fa-phone w-5"></i>
+                <span>{{ user.phone }}</span>
+              </div>
+            }
+          </div>
+
+          <button 
+            (click)="logout()"
+            class="w-full mt-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+          >
+            <i class="fas fa-sign-out-alt mr-2"></i>
+            Logout
+          </button>
+        </div>
+      } @else {
+        <div class="p-4 text-center text-gray-500">
+          <p>Not logged in</p>
+        </div>
+      }
+    </div>
+  }
+</div> 
