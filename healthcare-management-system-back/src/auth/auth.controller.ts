@@ -7,6 +7,8 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt-payload.interface';
+import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
+
 
 
 @Controller('auth')
@@ -30,6 +32,8 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Iniciar sesión' })
+  @ApiResponse({ status: 200, description: 'Inicio de sesión exitoso.' })
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -43,12 +47,7 @@ export class AuthController {
     return { message: 'inicio de sesion exitoso' };
   }
 
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('jwt');
-    return { message: 'Sesion cerrada exitosamente' };
-  }
+
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
@@ -81,5 +80,12 @@ export class AuthController {
     const userPayload = req.user as JwtPayload;
     const userId = userPayload.sub;
     return this.authService.changePassword(userId, changePasswordDto);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('jwt');
+    return { message: 'Sesion cerrada exitosamente' };
   }
 }
