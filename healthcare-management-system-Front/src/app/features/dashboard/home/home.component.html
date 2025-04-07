@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="md:w-1/2 flex justify-center">
-      <img src="/placeholder.svg?height=400&width=500" alt="Hospital Management" class="rounded-lg shadow-xl max-w-full h-auto" />
+      <img src="tecnology.jpeg" alt="Hospital Management" class="rounded-xl shadow-xl w-[65%] h-auto" />
     </div>
   </div>
 </section>
@@ -41,7 +41,7 @@
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Features</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div *ngFor="let feature of features" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+      <div *ngFor="let feature of features" class="bg-white p-6 rounded-lg shadow-md hover:shadow-2xl transition">
         <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path *ngIf="feature.icon === 'user-plus'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -62,7 +62,7 @@
   <div class="container mx-auto px-4">
     <div class="flex flex-col md:flex-row items-center">
       <div class="md:w-1/2 mb-10 md:mb-0">
-        <img src="/placeholder.svg?height=400&width=500" alt="About Our Hospital" class="rounded-lg shadow-lg max-w-full h-auto" />
+        <img src="hospital.jpeg" alt="About Our Hospital" class="rounded-3xl shadow-lg w-[90%] h-auto" />
       </div>
       <div class="md:w-1/2 md:pl-10">
         <h2 class="text-3xl font-bold mb-6 text-gray-800">About Our Hospital</h2>
@@ -105,8 +105,8 @@
     <h2 class="text-3xl font-bold mb-4">Ready to get started?</h2>
     <p class="text-xl mb-8 max-w-2xl mx-auto">Join our hospital management system today and experience the difference in healthcare administration.</p>
     <div class="flex justify-center space-x-4">
-      <a routerLink="/register" class="px-6 py-3 bg-white text-teal-600 font-bold rounded-lg hover:bg-gray-100 transition">Register Now</a>
-      <a routerLink="/login" class="px-6 py-3 border border-white rounded-lg hover:bg-teal-500 transition">Login</a>
+      <a routerLink="/auth/signup" class="px-6 py-3 bg-white text-teal-600 font-bold rounded-lg hover:bg-gray-100 transition">Register Now</a>
+      <a routerLink="/auth/login" class="px-6 py-3 border border-white rounded-lg hover:bg-teal-500 transition">Login</a>
     </div>
   </div>
 </section>
