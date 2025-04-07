@@ -88,11 +88,42 @@ export class AuthService {
       );
   }
 
-  changePassword(changePasswordData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/change-password`, changePasswordData, { withCredentials: true });
+  changePassword(data: { oldPassword: string; newPassword: string }): Observable<any> {
+    if (!this.userSubject.value) {
+      return throwError(() => new Error('Debe iniciar sesión para cambiar la contraseña'));
+    }
+
+    return this.http.post(`${this.apiUrl}/change-password`, data, { 
+      withCredentials: true 
+    }).pipe(
+      catchError((error) => {
+        let errorMessage = 'Error al cambiar la contraseña.';
+        if (error.status === 401) {
+          errorMessage = 'No autorizado. Por favor, inicie sesión nuevamente.';
+          this.userSubject.next(null);
+        } else if (error.error && typeof error.error.message === 'string') {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
   getUserRole(): string | null {
     return this.userSubject.value?.role || null;
+  }
+
+  resetPassword(data: { email: string; newPassword: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data, { 
+      withCredentials: true 
+    }).pipe(
+      catchError((error) => {
+        let errorMessage = 'Error al restablecer la contraseña.';
+        if (error.error && typeof error.error.message === 'string') {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 }

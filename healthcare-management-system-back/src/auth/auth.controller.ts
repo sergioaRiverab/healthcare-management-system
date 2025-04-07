@@ -9,8 +9,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt-payload.interface';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 
-
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -77,6 +75,8 @@ export class AuthController {
     @Req() req: Request,
     @Body() changePasswordDto: ChangePasswordDto
   ) {
+    console.log('Authenticated User:', req.user); // Log authenticated user
+    console.log('Change Password Request Body:', changePasswordDto); // Log request body
     const userPayload = req.user as JwtPayload;
     const userId = userPayload.sub;
     return this.authService.changePassword(userId, changePasswordDto);
@@ -88,4 +88,5 @@ export class AuthController {
     res.clearCookie('jwt');
     return { message: 'Sesion cerrada exitosamente' };
   }
+
 }
