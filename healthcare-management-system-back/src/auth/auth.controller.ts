@@ -7,14 +7,31 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt-payload.interface';
-import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiResponse({ status: 201, description: 'Usuario registrado exitosamente.' })
+  @ApiBody({
+    description: 'Datos necesarios para registrar un nuevo usuario.',
+    schema: {
+      example: {
+        username: 'DrJuanDavid',
+        email: 'jaunDavid.marulanda@gamil.com',
+        password: 'Juan*8900',
+        role: 'Doctor',
+        phone: '3027654567',
+        specialty: 'Neurologia',
+        schedule: 'Lunes a Viernes 9am-5pm',
+      },
+    },
+  })
   async signup(
     @Body() signupDto: SignupDto,
     @Res({ passthrough: true }) res: Response
@@ -32,6 +49,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Iniciar sesión' })
   @ApiResponse({ status: 200, description: 'Inicio de sesión exitoso.' })
+  @ApiBody({
+    description: 'Datos necesarios para iniciar sesión.',
+    schema: {
+      example: {
+        email: 'jaunDavid.marulanda@gamil.com',
+        password: 'Juan*8900',
+      },
+    },
+  })
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -45,8 +71,6 @@ export class AuthController {
     return { message: 'inicio de sesion exitoso' };
   }
 
-
-
   @UseGuards(JwtAuthGuard)
   @Get('me')
   @HttpCode(HttpStatus.OK)
@@ -59,7 +83,30 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Patch('profile')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Editar el perfil del usuario autenticado' })
+  @ApiResponse({ status: 200, description: 'Perfil actualizado exitosamente.' })
+  @ApiBody({
+    description: 'Datos necesarios para actualizar el perfil del usuario.',
+    schema: {
+      example: {
+        username: 'DrJuanDavidUpdate',
+        specialty: 'Cardiologia',
+      },
+    },
+  })
   async editProfile(
+    @Req() req: Request,
+    @Body() updateProfileDto: UpdateProfileDto
+  ) {
+    const userPayload = req.user as JwtPayload;
+    const userId = userPayload.sub;
+    return this.authService.editProfile(userId, updateProfileDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
     @Req() req: Request,
     @Body() updateProfileDto: UpdateProfileDto
   ) {
@@ -71,12 +118,23 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Cambiar la contraseña del usuario autenticado' })
+  @ApiResponse({ status: 200, description: 'Contraseña actualizada exitosamente.' })
+  @ApiBody({
+    description: 'Datos necesarios para cambiar la contraseña.',
+    schema: {
+      example: {
+        oldPassword: 'Juan*8900',
+        newPassword: 'Juan*89005',
+      },
+    },
+  })
   async changePassword(
     @Req() req: Request,
     @Body() changePasswordDto: ChangePasswordDto
   ) {
-    console.log('Authenticated User:', req.user); // Log authenticated user
-    console.log('Change Password Request Body:', changePasswordDto); // Log request body
+    console.log('Authenticated User:', req.user);
+    console.log('Change Password Request Body:', changePasswordDto);
     const userPayload = req.user as JwtPayload;
     const userId = userPayload.sub;
     return this.authService.changePassword(userId, changePasswordDto);
