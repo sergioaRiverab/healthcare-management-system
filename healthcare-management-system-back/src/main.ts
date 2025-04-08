@@ -7,15 +7,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.setGlobalPrefix('api/v1');
-
-  // Enable CORS with specific origin and credentials
+  app.setGlobalPrefix('api/v1')
   app.enableCors({
-    origin: 'http://localhost:4200', // Allow requests from this origin
-    credentials: true, // Allow cookies and other credentials
-  });
-
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    origin: 'http://localhost:4200', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  });  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
     .setTitle('Gestor Medico API')

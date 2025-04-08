@@ -1,1 +1,35 @@
-/* Add any custom styles here if needed */ 
+.modal {
+  @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-50;
+}
+
+.modal-content {
+  @apply bg-white p-8 rounded-xl shadow-lg w-[480px];
+}
+
+.modal-header {
+  @apply text-3xl font-bold text-emerald-green mb-6 text-center font-['Montserrat'];
+}
+
+.modal-form {
+  @apply space-y-4;
+}
+
+.modal-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green font-open-sans;
+}
+
+.modal-error {
+  @apply text-red-500 text-sm mt-1 font-open-sans;
+}
+
+.modal-actions {
+  @apply flex justify-end space-x-4 mt-6;
+}
+
+.modal-button-cancel {
+  @apply px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-300 font-open-sans;
+}
+
+.modal-button-save {
+  @apply px-6 py-2 bg-emerald-green text-white rounded-lg hover:bg-navy-blue transition duration-300 font-open-sans;
+}

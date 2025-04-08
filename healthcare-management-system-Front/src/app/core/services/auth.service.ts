@@ -18,7 +18,7 @@ export class AuthService {
     this.loadUser();
   }
 
-  private loadUser(): void {
+  public loadUser(): void {
     this.getProfile().subscribe({
       next: (user: User) => this.userSubject.next(user),
       error: () => this.userSubject.next(null)
@@ -76,16 +76,12 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/me`, { withCredentials: true });
   }
 
-  editProfile(updateProfileData: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/profile`, updateProfileData, { withCredentials: true })
-      .pipe(
-         tap(() => {
-            this.getProfile().subscribe({
-              next: (user: User) => this.userSubject.next(user),
-              error: () => this.userSubject.next(null)
-            });
-         })
-      );
+  editProfile(data: { username: string; email: string; phone?: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/profile`, data, { withCredentials: true });
+  }
+
+  getCurrentUser(): User | null {
+    return this.userSubject.value;
   }
 
   changePassword(data: { oldPassword: string; newPassword: string }): Observable<any> {

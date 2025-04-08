@@ -114,9 +114,9 @@ export class AuthService {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
-        username: updateProfileDto.username,
-        email: updateProfileDto.email,
-        phone: updateProfileDto.phone,
+        username: updateProfileDto.username || undefined,
+        email: updateProfileDto.email || undefined,
+        phone: updateProfileDto.phone || undefined,
       }
     });
 
@@ -124,8 +124,8 @@ export class AuthService {
       await this.prisma.doctor.update({
         where: { userId: userId },
         data: {
-          specialty: updateProfileDto.specialty,
-          schedule: updateProfileDto.schedule,
+          specialty: updateProfileDto.specialty || undefined,
+          schedule: updateProfileDto.schedule || undefined,
         }
       });
     } else if (user.role === 'Patient') {
@@ -133,8 +133,8 @@ export class AuthService {
         where: { userId: userId },
         data: {
           dob: updateProfileDto.dob ? new Date(updateProfileDto.dob) : undefined,
-          address: updateProfileDto.address,
-          medicalHistory: updateProfileDto.medicalHistory,
+          address: updateProfileDto.address || undefined,
+          medicalHistory: updateProfileDto.medicalHistory || undefined,
         }
       });
     }
