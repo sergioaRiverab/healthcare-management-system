@@ -11,7 +11,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"  // O "mysql" si usas MySQL
+  provider = "postgresql" 
   url      = env("DATABASE_URL")
 }
 
@@ -43,5 +43,44 @@ model Doctor {
   schedule  String
   userId    Int     @unique
   user      User    @relation(fields: [userId], references: [id])
+}
+
+model Appointment {
+  id          Int               @id @default(autoincrement())
+  date        DateTime
+  notes String?
+  status      AppointmentStatus @default(PENDIENTE)
+  patientId   Int
+  doctorId    Int
+  patient     Patient           @relation(fields: [patientId], references: [id])
+  doctor      Doctor            @relation(fields: [doctorId], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+enum AppointmentStatus {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+}
+
+
+enum DayOfWeek {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
+model DoctorSchedule {
+  id        Int       @id @default(autoincrement())
+  doctorId  Int
+  day       DayOfWeek
+  startTime DateTime  
+  endTime   DateTime
+  doctor    Doctor    @relation(fields: [doctorId], references: [id])
 }
 
