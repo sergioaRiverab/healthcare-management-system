@@ -57,20 +57,35 @@
           }
         </div>
 
-        <div>
-          <input 
-            type="text" 
-            formControlName="phone" 
-            placeholder="Enter your phone number"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green font-['Open Sans']"
-          />
-          @if (signUpForm.get('phone')?.touched && signUpForm.get('phone')?.invalid) {
-            <div class="text-red-500 text-sm mt-1 font-['Open Sans']">
-              Phone number must be exactly 10 digits.
-            </div>
-          }
+        <div class="flex gap-2">
+        
+          <select 
+            formControlName="countryCode"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green font-['Open_Sans']"
+          >
+            <option value="+57">🇨🇴 +57</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+34">🇪🇸 +34</option>
+            <option value="+52">🇲🇽 +52</option>
+        
+          </select>
+        
+   
+          <div class="flex-1">
+            <input 
+              type="text" 
+              formControlName="phone" 
+              placeholder="Enter your phone number"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-green font-['Open_Sans']"
+            />
+           
+          </div>
         </div>
-
+        @if (signUpForm.get('phone')?.touched && signUpForm.get('phone')?.invalid) {
+          <div class="text-red-500 text-sm mt-1 font-['Open_Sans']">
+            Phone number must be exactly 10 digits.
+          </div>
+        }
         <div>
           <input 
             type="password" 
@@ -113,9 +128,7 @@
         <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 font-['Open Sans']"> 
           <i class="fab fa-google mr-2"></i> Sign in with Google
         </button>
-        <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 font-['Open Sans']">
-          <i class="fab fa-apple mr-2"></i> Sign in with Apple
-        </button>
+      
       </div>
 
       <div class="mt-6 text-center">
