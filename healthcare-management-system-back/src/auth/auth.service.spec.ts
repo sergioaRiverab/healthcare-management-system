@@ -218,4 +218,150 @@ describe('AuthService', () => {
       );
     });
   });
+
+
+  describe('editProfile', () => {
+    it('should update user and doctor profile successfully', async () => {
+      const userId = 1;
+      const dto = {
+        username: 'newDoctor',
+        specialty: 'Cardiología',
+        schedule: 'Lunes a Viernes 10am - 4pm',
+      };
+  
+      (prisma.user.update as jest.Mock).mockResolvedValueOnce({
+        id: userId,
+        username: dto.username,
+        email: 'doctor@correo.com',
+        phone: '3100000000',
+        role: 'Doctor',
+        password: 'hashedPassword',
+      });
+  
+      (prisma.doctor.update as jest.Mock).mockResolvedValueOnce({});
+  
+      const result = await service.editProfile(userId, dto as any);
+  
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: userId },
+        data: {
+          username: dto.username,
+          email: undefined,
+          phone: undefined,
+        },
+      });
+  
+      expect(prisma.doctor.update).toHaveBeenCalledWith({
+        where: { userId },
+        data: {
+          specialty: dto.specialty,
+          schedule: dto.schedule,
+        },
+      });
+  
+      expect(result).toHaveProperty('message', 'Perfil actualizado exitosamente');
+      expect(result.user).toMatchObject({
+        id: userId,
+        username: dto.username,
+        email: 'doctor@correo.com',
+        phone: '3100000000',
+      });
+    });
+  
+    it('should update user and patient profile successfully', async () => {
+      const userId = 2;
+      const dto = {
+        address: 'Calle 123',
+        dob: '2000-01-01',
+        medicalHistory: 'Hipertensión',
+      };
+  
+      (prisma.user.update as jest.Mock).mockResolvedValueOnce({
+        id: userId,
+        username: 'patient1',
+        email: 'patient@email.com',
+        phone: '3000000000',
+        role: 'Patient',
+        password: 'hashedPassword',
+      });
+  
+      (prisma.patient.update as jest.Mock).mockResolvedValueOnce({});
+  
+      const result = await service.editProfile(userId, dto as any);
+  
+      expect(prisma.patient.update).toHaveBeenCalledWith({
+        where: { userId },
+        data: {
+          dob: new Date(dto.dob),
+          address: dto.address,
+          medicalHistory: dto.medicalHistory,
+        },
+      });
+  
+      expect(result).toHaveProperty('message', 'Perfil actualizado exitosamente');
+      expect(result.user).toMatchObject({
+        id: userId,
+        username: 'patient1',
+        email: 'patient@email.com',
+      });
+    });
+  });
+  
+  
+
+  describe('changePassword', () => {
+    it('should change the password successfully', async () => {
+      const userId = 3;
+      const dto = {
+        oldPassword: 'OldPass*123',
+        newPassword: 'NewPass*456',
+      };
+  
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: userId,
+        password: 'hashedOld',
+      });
+  
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedNew');
+      (prisma.user.update as jest.Mock).mockResolvedValue({});
+  
+      const result = await service.changePassword(userId, dto as any);
+  
+      expect(bcrypt.compare).toHaveBeenCalledWith(dto.oldPassword, 'hashedOld');
+      expect(bcrypt.hash).toHaveBeenCalledWith(dto.newPassword, 10);
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: userId },
+        data: { password: 'hashedNew' },
+      });
+      expect(result).toEqual({ message: 'Contraseña actualizada exitosamente' });
+    });
+  
+    it('should throw if old password is incorrect', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: 3,
+        password: 'hashedOld',
+      });
+  
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+  
+      await expect(service.changePassword(3, {
+        oldPassword: 'wrong',
+        newPassword: 'new',
+      } as any)).rejects.toThrow(UnauthorizedException);
+    });
+  
+    it('should throw if user does not exist', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+  
+      await expect(service.changePassword(99, {
+        oldPassword: 'any',
+        newPassword: 'any',
+      } as any)).rejects.toThrow(UnauthorizedException);
+    });
+  });
+  
+  
+
+
 });
