@@ -34,22 +34,32 @@ model Patient {
   medicalHistory String
   userId         Int     @unique
   user           User    @relation(fields: [userId], references: [id])
+  appointments Appointment[]
 }
 
 
 model Doctor {
   id        Int     @id @default(autoincrement())
   specialty String
-  schedule  String
+  schedule String
   userId    Int     @unique
   user      User    @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+  schedules DoctorSchedule[]
+
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED 
 }
 
 model Appointment {
   id          Int               @id @default(autoincrement())
   date        DateTime
   notes String?
-  status      AppointmentStatus @default(PENDIENTE)
+  status      AppointmentStatus @default(PENDING)
   patientId   Int
   doctorId    Int
   patient     Patient           @relation(fields: [patientId], references: [id])
@@ -58,21 +68,16 @@ model Appointment {
   updatedAt   DateTime          @updatedAt
 }
 
-enum AppointmentStatus {
-  PENDIENTE
-  CONFIRMADA
-  CANCELADA
-}
 
 
 enum DayOfWeek {
-  LUNES
-  MARTES
-  MIERCOLES
-  JUEVES
-  VIERNES
-  SABADO
-  DOMINGO
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 model DoctorSchedule {
@@ -82,5 +87,6 @@ model DoctorSchedule {
   startTime DateTime  
   endTime   DateTime
   doctor    Doctor    @relation(fields: [doctorId], references: [id])
+  @@unique([doctorId, day])
 }
 

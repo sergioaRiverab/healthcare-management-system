@@ -10,6 +10,9 @@ import { PatientModule } from './patient/patient.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { AppointmentController } from './appointment/appointment.controller';
+import { AppointmentModule } from './appointment/appointment.module';
+import { DoctorScheduleModule } from './doctor-schedule/doctor-schedule.module';
 
 
 @Module({
@@ -18,9 +21,11 @@ import { ConfigModule } from '@nestjs/config';
     DoctorModule,
     PatientModule, 
     PrismaModule,
-    ConfigModule.forRoot({ isGlobal: true })
+    ConfigModule.forRoot({ isGlobal: true }),
+    AppointmentModule,
+    DoctorScheduleModule
   ],
-  controllers: [UserController],
+  controllers: [UserController, AppointmentController],
   providers: [AppService, UserService, DoctorService, PrismaService],
 })
 export class AppModule {}
