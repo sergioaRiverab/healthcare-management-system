@@ -1,0 +1,27 @@
+.appointments-container {
+    display: flex;
+    gap: 16px;
+  }
+  .map {
+    flex: 2;
+    height: 400px;
+  }
+  .list {
+    flex: 1;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .list ul {
+    list-style: none;
+    padding: 0;
+  }
+  .list li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .list li.selected {
+    background: #e7f3ff;
+  }

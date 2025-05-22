@@ -59,7 +59,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
       formData.email = formData.email.toLowerCase();
-
+      console.log("EMAIL: ",formData.email, " PASSWORD: ",formData.password)
       this.authService.login(formData.email, formData.password).subscribe({
         next: () => {
           alert('Inicio de sesión exitoso');

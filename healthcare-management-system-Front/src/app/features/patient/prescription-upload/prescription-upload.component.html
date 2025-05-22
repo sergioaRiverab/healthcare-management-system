@@ -1,0 +1,32 @@
+<!-- src/app/prescription-upload/prescription-upload.component.html -->
+<div class="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Upload Prescription</h2>
+
+  <input
+    type="file"
+    (change)="onFileSelected($event)"
+    accept="application/pdf"
+    class="block w-full text-sm text-gray-700
+           file:mr-4 file:py-2 file:px-4
+           file:rounded-md file:border file:border-gray-300
+           file:text-sm file:font-medium
+           file:bg-blue-50 file:text-blue-700
+           hover:file:bg-blue-100
+           mb-4"
+  />
+
+  <!-- Mostrar nombre del archivo seleccionado -->
+  <p *ngIf="selectedFile" class="text-gray-600 mb-4">
+    Selected file: <span class="font-medium">{{ selectedFile.name }}</span>
+  </p>
+
+  <button
+    class="w-full bg-blue-600 hover:bg-blue-700
+           text-white font-medium py-2 px-4 rounded-md
+           disabled:opacity-50 disabled:cursor-not-allowed"
+    [disabled]="!selectedFile"
+    (click)="upload()"
+  >
+    Upload
+  </button>
+</div>

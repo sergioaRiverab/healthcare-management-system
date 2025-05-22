@@ -26,6 +26,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
+    console.log("EMAIL: ", email, " PASSWORD:" , password)
     return this.http.post<any>(
       `${this.apiUrl}/login`, 
       { email, password }, 
@@ -57,10 +58,16 @@ export class AuthService {
     phone?: string; 
     dob?: string; 
     address?: string; 
-    medicalHistory?: string; 
     specialty?: string; 
     schedule?: string 
+    pharmacyName?: string;
+    pharmacyPhone?: string;
+    pharmacyAddress?: string;
+    lat?: number;
+    lng?: number;
+
   }): Observable<any> {
+    console.log('Registering user:', user);
     return this.http.post(`${this.apiUrl}/signup`, user, { withCredentials: true });
   }
 
