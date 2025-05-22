@@ -1,105 +1,203 @@
-import { PrismaClient } from '@prisma/client';
-
-export const AppointmentStatus = {
-    PENDING: 'PENDING',
-    CONFIRMED: 'CONFIRMED',
-    CANCELLED: 'CANCELLED',
-
-}
-
-export const DayOfWeek = {
-    MONDAY: 'MONDAY',
-    TUESDAY: 'TUESDAY',
-    WEDNESDAY: 'WEDNESDAY',
-    THURSDAY: 'THURSDAY',
-    FRIDAY: 'FRIDAY',
-    SATURDAY: 'SATURDAY',
-    SUNDAY: 'SUNDAY',
-}
+import {
+  PrismaClient,
+  UserRole,
+  AppointmentStatus,
+  PrescriptionItemStatus,
+  NotificationType
+} from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
+const SALT_ROUNDS = 10;
 
 async function main() {
-  // 1. Crear 5 usuarios con rol Doctor
-  const doctorUsers = await Promise.all([
-    prisma.user.create({ data: { username: 'doctor1', email: 'doctor1@example.com', password: 'hashedPwd1', role: 'Doctor', phone: '3002000001' } }),
-    prisma.user.create({ data: { username: 'doctor2', email: 'doctor2@example.com', password: 'hashedPwd2', role: 'Doctor', phone: '3002000002' } }),
-    prisma.user.create({ data: { username: 'doctor3', email: 'doctor3@example.com', password: 'hashedPwd3', role: 'Doctor', phone: '3002000003' } }),
-    prisma.user.create({ data: { username: 'doctor4', email: 'doctor4@example.com', password: 'hashedPwd4', role: 'Doctor', phone: '3002000004' } }),
-    prisma.user.create({ data: { username: 'doctor5', email: 'doctor5@example.com', password: 'hashedPwd5', role: 'Doctor', phone: '3002000005' } }),
-  ]);
+  // ——— 0) Seed 5 usuarios PATIENT y 5 PHARMACY con password hasheadas ———
+  const patientData = Array.from({ length: 5 }, (_, i) => ({
+    username: `patient${i+1}`,
+    email:    `patient${i+1}@example.com`,
+    password: `Password*${i+1}`,
+    role:     UserRole.Patient,
+    phone:    `300300000${i+1}`,
+  }));
+  const pharmacyData = Array.from({ length: 5 }, (_, i) => ({
+    username: `pharmacy${i+1}`,
+    email:    `pharmacy${i+1}@example.com`,
+    password: `Password*${i+6}`,
+    role:     UserRole.Pharmacy,
+    phone:    `310400000${i+1}`,
+  }));
 
-  // 2. Crear 5 usuarios con rol Patient
-  const patientUsers = await Promise.all([
-    prisma.user.create({ data: { username: 'patient1', email: 'patient1@example.com', password: 'hashedPwd6', role: 'Patient', phone: '3003000001' } }),
-    prisma.user.create({ data: { username: 'patient2', email: 'patient2@example.com', password: 'hashedPwd7', role: 'Patient', phone: '3003000002' } }),
-    prisma.user.create({ data: { username: 'patient3', email: 'patient3@example.com', password: 'hashedPwd8', role: 'Patient', phone: '3003000003' } }),
-    prisma.user.create({ data: { username: 'patient4', email: 'patient4@example.com', password: 'hashedPwd9', role: 'Patient', phone: '3003000004' } }),
-    prisma.user.create({ data: { username: 'patient5', email: 'patient5@example.com', password: 'hashedPwd10', role: 'Patient', phone: '3003000005' } }),
-  ]);
-
-  // 3. Crear registros de Doctor
-  const doctors = await Promise.all(
-    doctorUsers.map((u, i) =>
-      prisma.doctor.create({
-        data: {
-          userId: u.id,
-          specialty: `Specialty ${i + 1}`,
-          schedule: `Mon-Fri 9:00-17:00`,
-        },
-      })
-    )
+  const hashedPatients = await Promise.all(
+    patientData.map(async u => ({
+      ...u,
+      password: await bcrypt.hash(u.password, SALT_ROUNDS)
+    }))
+  );
+  const hashedPharmacies = await Promise.all(
+    pharmacyData.map(async u => ({
+      ...u,
+      password: await bcrypt.hash(u.password, SALT_ROUNDS)
+    }))
   );
 
-  // 4. Crear registros de Patient
+  await prisma.user.createMany({ data: hashedPatients, skipDuplicates: true });
+  await prisma.user.createMany({ data: hashedPharmacies, skipDuplicates: true });
+
+  // recuperar los 5 primeros de cada rol
+  const patientUsers  = await prisma.user.findMany({ where: { role: UserRole.Patient }, take: 5 });
+  const pharmacyUsers = await prisma.user.findMany({ where: { role: UserRole.Pharmacy }, take: 5 });
+
+  // ——— 1) Seed Patients ———
   const patients = await Promise.all(
     patientUsers.map((u, i) =>
       prisma.patient.create({
         data: {
           userId: u.id,
-          dob: new Date(1990 + i, i, 1),
-          address: `Address ${i + 1}`,
-          medicalHistory: `Medical history entry #${i + 1}`,
-        },
+          dob:    new Date(1980 + i, (i*3) % 12, 10),
+          address:`Calle ${i+1} #100-${i*5}, Ciudad Ejemplo`
+        }
       })
     )
   );
 
-  // 5. Crear horarios de doctores (DoctorSchedule)
-  const days = Object.values(DayOfWeek);
-  const schedules = await Promise.all(
-    doctors.map((d, i) =>
-      prisma.doctorSchedule.create({
+  // ——— 2) Seed Pharmacies ———
+  const pharmacies = await Promise.all(
+    pharmacyUsers.map((u, i) =>
+      prisma.pharmacy.create({
         data: {
-          doctorId: d.id,
-          day: days[i % days.length],
-          startTime: new Date(2025, 4, 1, 9, 0),
-          endTime: new Date(2025, 4, 1, 17, 0),
-        },
+          userId:  u.id,
+          address: `Av. Siempre Viva ${200 + i}, Barrio Ejemplo`,
+          lat:     4.710 + i * 0.0015,
+          lng:    -74.072 - i * 0.0015
+        }
       })
     )
   );
 
-  // 6. Crear citas (Appointment)
+  // ——— 3) Seed Medications ———
+  const medsData = [
+    { name: 'Paracetamol', description: 'Analgésico y antipirético' },
+    { name: 'Ibuprofeno',  description: 'Antiinflamatorio'        },
+    { name: 'Amoxicilina', description: 'Antibiótico amplio'     },
+    { name: 'Omeprazol',    description: 'Inhibidor bomba protones'},
+    { name: 'Salbutamol',   description: 'Broncodilatador'        },
+  ];
+  const medications = await Promise.all(
+    medsData.map(m => prisma.medication.create({ data: m }))
+  );
+
+  // ——— 4) Seed Inventory ———
+  const invs = await Promise.all(
+    Array.from({ length: 5 }, (_, i) =>
+      prisma.inventory.create({
+        data: {
+          pharmacyId:   pharmacies[i].id,
+          medicationId: medications[i].id,
+          quantity:     50 * (i+1)
+        }
+      })
+    )
+  );
+
+  // ——— 5) Seed Prescriptions ———
+  const prescriptions = await Promise.all(
+    patients.map((p, i) =>
+      prisma.prescription.create({
+        data: {
+          patientId:  p.id,
+          pharmacyId: pharmacies[(i+1) % 5].id,
+          fileUrl:    `prescriptions/presc_${p.id}.pdf`
+        }
+      })
+    )
+  );
+
+  // ——— 6) Seed PrescriptionItems ———
+  const items = await Promise.all(
+    prescriptions.map((presc, i) =>
+      prisma.prescriptionItem.create({
+        data: {
+          prescriptionId: presc.id,
+          medicationId:   medications[i].id,
+          quantity:       (i+1)*2,
+          status:         PrescriptionItemStatus.PENDING
+        }
+      })
+    )
+  );
+
+  // ——— 7) Seed Appointments ———
   const appointments = await Promise.all(
     patients.map((p, i) =>
       prisma.appointment.create({
         data: {
-          date: new Date(2025, 4, 10 + i, 10 + i, 0),
-          notes: `Appointment note #${i + 1}`,
-          status: AppointmentStatus.PENDING,
-          patientId: p.id,
-          doctorId: doctors[i].id,
-        },
+          patientId:  p.id,
+          pharmacyId: pharmacies[i].id,
+          date:       new Date(Date.now() + (i+1)*24*60*60*1000),
+          status:     AppointmentStatus.PENDING
+        }
       })
     )
   );
 
-  console.log(`Seed completed: Users=${doctorUsers.length + patientUsers.length}, Doctors=${doctors.length}, Patients=${patients.length}, Schedules=${schedules.length}, Appointments=${appointments.length}`);
+  // ——— 8) Seed Notifications ———
+  const notifications = await Promise.all([
+    prisma.notification.create({
+      data: {
+        userId: patientUsers[0].id,
+        type:   NotificationType.STATUS_CHANGED,
+        message:'Tu prescripción fue aceptada.',
+        read:   false
+      }
+    }),
+    prisma.notification.create({
+      data: {
+        userId: patientUsers[1].id,
+        type:   NotificationType.APPOINTMENT_REMINDER,
+        message:'Recordatorio: cita mañana 10:00 AM.',
+        read:   false
+      }
+    }),
+    prisma.notification.create({
+      data: {
+        userId: pharmacyUsers[0].id,
+        type:   NotificationType.PRESCRIPTION_UPDATED,
+        message:'Nueva prescripción pendiente.',
+        read:   false
+      }
+    }),
+    prisma.notification.create({
+      data: {
+        userId: pharmacyUsers[1].id,
+        type:   NotificationType.PRESCRIPTION_UPDATED,
+        message:'Prescripción revisada (leer).',
+        read:   true
+      }
+    }),
+    prisma.notification.create({
+      data: {
+        userId: patientUsers[2].id,
+        type:   NotificationType.STATUS_CHANGED,
+        message:'Ítem en backorder.',
+        read:   false
+      }
+    })
+  ]);
+
+  console.log('✅ Seed completado:', {
+    patients:       patients.length,
+    pharmacies:     pharmacies.length,
+    medications:    medications.length,
+    inventories:    invs.length,
+    prescriptions:  prescriptions.length,
+    items:          items.length,
+    appointments:   appointments.length,
+    notifications:  notifications.length
+  });
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

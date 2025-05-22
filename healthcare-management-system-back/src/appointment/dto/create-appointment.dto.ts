@@ -1,25 +1,18 @@
-import { IsDateString, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
-export enum AppointmentStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  CANCELLED = 'CANCELLED',
-}
+import { IsInt, IsDateString, IsEnum, IsOptional } from 'class-validator';
+import { AppointmentStatus } from '@prisma/client';
 
 export class CreateAppointmentDto {
-  @IsDateString()
-  date: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
-
-  @IsOptional()
-  @IsEnum(AppointmentStatus)
-  status?: AppointmentStatus;
-
   @IsInt()
   patientId: number;
 
   @IsInt()
-  doctorId: number;
+  pharmacyId: number;
+
+  @IsDateString()
+  date: string;
+
+
+  @IsOptional()
+  @IsEnum(AppointmentStatus)
+  status?: AppointmentStatus;
 }

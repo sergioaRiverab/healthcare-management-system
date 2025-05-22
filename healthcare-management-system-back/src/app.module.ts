@@ -4,28 +4,34 @@ import { AuthModule } from './auth/auth.module';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
-import { DoctorService } from './doctor/doctor.service';
-import { DoctorModule } from './doctor/doctor.module';
 import { PatientModule } from './patient/patient.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import { AppointmentController } from './appointment/appointment.controller';
+import { PharmacyModule } from './pharmacy/pharmacy.module';
+import { MedicationModule } from './medication/medication.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { PrescriptionModule } from './prescription/prescription.module';
+import { PrescriptionItemModule } from './prescription-item/prescription-item.module';
 import { AppointmentModule } from './appointment/appointment.module';
-import { DoctorScheduleModule } from './doctor-schedule/doctor-schedule.module';
+import { NotificationModule } from './notification/notification.module';
 
 
 @Module({
   imports: [AuthModule,
     UserModule, 
-    DoctorModule,
     PatientModule, 
     PrismaModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    PharmacyModule,
+    MedicationModule,
+    InventoryModule,
+    PrescriptionModule,
+    PrescriptionItemModule,
     AppointmentModule,
-    DoctorScheduleModule
+    NotificationModule
   ],
-  controllers: [UserController, AppointmentController],
-  providers: [AppService, UserService, DoctorService, PrismaService],
+  controllers: [UserController],
+  providers: [AppService, UserService, PrismaService],
 })
 export class AppModule {}

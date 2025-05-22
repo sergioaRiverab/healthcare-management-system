@@ -1,15 +1,15 @@
+
 export enum AppointmentStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  CANCELLED = 'CANCELLED',
+    PENDING,
+  CONFIRMED,
+  CANCELLED
 }
 export class AppointmentEntity {
   id: number;
-  date: Date;
-  notes: string | null;
-  status: AppointmentStatus;
   patientId: number;
-  doctorId: number;
+  pharmacyId: number;
+  date: Date;
+  status: AppointmentStatus;
   createdAt: Date;
   updatedAt: Date;
 }
