@@ -59,11 +59,17 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
       formData.email = formData.email.toLowerCase();
-      console.log("EMAIL: ",formData.email, " PASSWORD: ",formData.password)
       this.authService.login(formData.email, formData.password).subscribe({
         next: () => {
           alert('Inicio de sesión exitoso');
-          this.router.navigate(['/dashboard']);
+          const role = this.authService.getUserRole();
+          if (role === 'Pharmacy') {
+            this.router.navigate(['/pharmacy/dashboard']);
+          } else if (role === 'Patient') {
+            this.router.navigate(['/patient/dashboard']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: (err: Error) => {
           console.error('Error en el inicio de sesión:', err.message);

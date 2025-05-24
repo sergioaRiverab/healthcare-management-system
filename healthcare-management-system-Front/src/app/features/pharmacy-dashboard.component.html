@@ -1,0 +1,196 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-blue-600 text-white py-4 px-6 flex items-center">
+    <h1 class="text-2xl font-bold">Pharmacy Dashboard</h1>
+  </div>
+
+  <div class="tabs mt-4 mb-8">
+
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="md:col-span-2">
+      <!-- Requests Section -->
+      <div class="bg-white shadow rounded-lg p-6 mb-8">
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 border-b text-center">Patient</th>
+              <th class="py-3 px-4 border-b text-center">Request Date</th>
+              <th class="py-3 px-4 border-b text-center">Medications</th>
+              <th class="py-3 px-4 border-b text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="py-2 px-4 border-b text-center">John Smith</td>
+              <td class="py-2 px-4 border-b text-center">April 22, 2024</td>
+              <td class="py-2 px-4 border-b text-center">Lisinopril<br>Metformin</td>
+              <td class="py-2 px-4 border-b text-center">
+                <div class="inline-flex items-center gap-2">
+                  <button class="bg-blue-500 text-white px-3 py-1 rounded">Accept</button>
+                  <button class="bg-gray-300 text-gray-700 px-3 py-1 rounded">Bacorder</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-2 px-4 border-b text-center">Mary Johnson</td>
+              <td class="py-2 px-4 border-b text-center">April 22, 2024</td>
+              <td class="py-2 px-4 border-b text-center">Atoriastatin</td>
+              <td class="py-2 px-4 border-b text-center">
+                <div class="inline-flex items-center gap-2">
+                  <button class="bg-blue-500 text-white px-3 py-1 rounded">Accept</button>
+                  <button class="bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+                </div>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Robert Brown</td>
+              <td class="py-2 px-4 border-b text-center">April 21, 2024</td>
+              <td class="py-2 px-4 border-b text-center">Levothyroxine<br>Albuterol</td>
+              <td class="py-2 px-4 border-b text-center">
+                <div class="inline-flex items-center gap-2">
+                  <button class="bg-blue-500 text-white px-3 py-1 rounded">Accept</button>
+                  <button class="bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+                </div>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Patricia Jones</td>
+              <td class="py-2 px-4 border-b text-center">April 21, 2024</td>
+              <td class="py-2 px-4 border-b text-center">Rejecar</td>
+              <td class="py-2 px-4 border-b text-center">
+                <div class="inline-flex items-center gap-2">
+                  <button class="bg-blue-500 text-white px-3 py-1 rounded">Accept</button>
+                  <button class="bg-red-500 text-white px-3 py-1 rounded">Rejecar</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Inventory Management Section -->
+      <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Inventory Management</h2>
+         <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-3 px-4 border-b">Medication</th>
+              <th class="py-3 px-4 border-b">Stock Level</th>
+              <th class="py-3 px-4 border-b text-center">Available</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="py-2 px-4 border-b text-center">Amlodipine</td>
+              <td class="py-2 px-4 border-b text-center">45</td>
+              <td class="py-2 px-4 border-b text-center">
+                <label class="flex items-center justify-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" checked>
+                  <div class="ios-toggle-switch relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Simvastatin</td>
+              <td class="py-2 px-4 border-b text-center">28</td>
+              <td class="py-2 px-4 border-b text-center">
+                <label class="flex items-center justify-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer">
+                  <div class="ios-toggle-switch relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Omeprazole</td>
+              <td class="py-2 px-4 border-b text-center">60</td>
+              <td class="py-2 px-4 border-b text-center">
+                <label class="flex items-center justify-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" checked>
+                  <div class="ios-toggle-switch relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Pantoprozole</td>
+              <td class="py-2 px-4 border-b text-center">52</td>
+              <td class="py-2 px-4 border-b text-center">
+                <label class="flex items-center justify-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" checked>
+                  <div class="ios-toggle-switch relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
+              </td>
+            </tr>
+             <tr>
+              <td class="py-2 px-4 border-b text-center">Hydrochlorothiazide</td>
+              <td class="py-2 px-4 border-b text-center">20</td>
+              <td class="py-2 px-4 border-b text-center">
+                <label class="flex items-center justify-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" checked>
+                  <div class="ios-toggle-switch relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Calendar Placeholder -->
+    <div class="md:col-span-1 bg-white shadow rounded-lg p-6">
+      <div class="relative w-full h-40 bg-gray-200 rounded-lg overflow-hidden mb-6">
+        <!-- Abstract map elements -->
+        <div class="absolute top-0 left-0 w-full h-full transform -skew-y-6 origin-top-left bg-blue-300 opacity-50"></div>
+        <div class="absolute top-0 left-0 w-full h-full transform skew-y-6 origin-top-right bg-blue-400 opacity-50"></div>
+        <div class="absolute top-0 left-0 w-full h-full grid grid-cols-3 grid-rows-3 gap-1 p-2">
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+          <div class="bg-white opacity-20"></div>
+        </div>
+      </div>
+      <h2 class="text-xl font-semibold mb-4">Calendar</h2>
+      <div class="calendar-simulation">
+        <div class="flex justify-between items-center mb-4 text-lg font-semibold">
+          <button (click)="previousMonth()" class="px-3 py-1 rounded bg-gray-200 text-gray-700">&lt;</button>
+          <h3>{{ getMonthYear() }}</h3>
+          <button (click)="nextMonth()" class="px-3 py-1 rounded bg-gray-200 text-gray-700">&gt;</button>
+        </div>
+        <div class="grid grid-cols-7 text-center text-sm font-semibold text-gray-600 mb-2">
+          <span>Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1 text-center text-sm">
+          <!-- Example days - replace with actual calendar logic -->
+          <ng-container *ngFor="let day of calendarDays">
+            <span
+              *ngIf="day !== null"
+              class="py-1 border rounded cursor-pointer"
+              [ngClass]="{'bg-blue-600 text-white': day === selectedDay}"
+              (click)="selectDay(day)"
+            >
+              {{ day }}
+            </span>
+            <span *ngIf="day === null" class="py-1"></span>
+          </ng-container>
+        </div>
+      </div>
+      <!-- Notifications Box -->
+      <div class="bg-white shadow rounded-lg p-6 mt-6">
+        <h2 class="text-xl font-semibold mb-4">Notifications</h2>
+        <p class="text-gray-600">No new notifications.</p>
+        <!-- Placeholder for notifications list -->
+      </div>
+    </div>
+  </div>
+</div>

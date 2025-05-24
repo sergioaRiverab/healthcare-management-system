@@ -1,17 +1,40 @@
-import { Controller, Get, ParseIntPipe,Param, } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { PharmacyService } from './pharmacy.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { InventoryItemDto } from './dto/inventory-item.dto';
 
-@Controller('pharmacies')
+@Controller('pharmacy')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('Pharmacy')
 export class PharmacyController {
-  constructor(private readonly service: PharmacyService) {}
+  constructor(private readonly pharmacyService: PharmacyService) {}
 
-  @Get()
-  findAll() {
-    return this.service.findAll();
+  @Get('info')
+  async getPharmacyInfo(@Request() req) {
+    return this.pharmacyService.getPharmacyInfo(req.user.pharmacyId);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.service.findOne(id);
+  // Inventory Endpoints
+  @Get('inventory')
+  async getInventory(@Request() req) {
+    return this.pharmacyService.getInventory(req.user.pharmacyId);
+  }
+
+  @Post('inventory')
+  async addInventoryItem(
+    @Request() req,
+    @Body() data: Omit<InventoryItemDto, 'id'>
+  ) {
+    return this.pharmacyService.addInventoryItem(req.user.pharmacyId, data);
+  }
+
+  @Put('inventory/:id')
+  async updateInventoryItem(
+    @Param('id') id: string,
+    @Body() data: Partial<InventoryItemDto>
+  ) {
+    return this.pharmacyService.updateInventoryItem(parseInt(id), data);
   }
 }
