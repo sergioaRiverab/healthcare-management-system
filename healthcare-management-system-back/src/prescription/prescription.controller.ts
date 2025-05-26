@@ -31,20 +31,19 @@ export class PrescriptionController {
         }
         cb(null, true);
       },
-      limits: { fileSize: 10 * 1024 * 1024 },
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     }),
   )
   uploadPrescription(
     @UploadedFile() file: any,
-    @Body() body: { patientId: string; patientLat: string; patientLng: string },
+    @Body() body: { patientId: string; pharmacyId: string },
   ) {
     const dto: CreatePrescriptionDto = {
       patientId:  parseInt(body.patientId, 10),
-      patientLat: parseFloat(body.patientLat),
-      patientLng: parseFloat(body.patientLng),
+      pharmacyId: parseInt(body.pharmacyId, 10),
       file,
     };
-    return this.prescriptionService.createWithNearestPharmacy(dto);
+    return this.prescriptionService.create(dto);
   }
 
   @Get()
@@ -55,6 +54,12 @@ export class PrescriptionController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.prescriptionService.findOne(id);
+  }
+  @Get('by-user/:userId')
+  findByPharmacyUser(
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.prescriptionService.findByPharmacyUser(userId);
   }
 
   @Patch(':id')

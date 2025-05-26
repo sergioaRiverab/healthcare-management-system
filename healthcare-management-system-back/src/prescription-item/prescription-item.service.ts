@@ -11,6 +11,10 @@ export class PrescriptionItemService {
     return this.prisma.prescriptionItem.create({ data: dto });
   }
 
+  async createBulk(dtos: CreatePrescriptionItemDto[]) {
+    return this.prisma.prescriptionItem.createMany({ data: dtos });
+  }
+
   async findAll() {
     return this.prisma.prescriptionItem.findMany();
   }
@@ -20,6 +24,21 @@ export class PrescriptionItemService {
     if (!item) throw new NotFoundException(`PrescriptionItem with id ${id} not found`);
     return item;
   }
+
+  //traer el objeto medication 
+  async findByPrescription(prescriptionId: number) {
+    const items = await this.prisma.prescriptionItem.findMany({
+      where: { prescriptionId },
+      include: { medication: true },
+    });
+    if (items.length === 0) {
+      throw new NotFoundException(`No items found for prescription ${prescriptionId}`);
+    }
+    return items;
+  }
+
+
+
 
   async update(id: number, dto: UpdatePrescriptionItemDto) {
     await this.findOne(id);

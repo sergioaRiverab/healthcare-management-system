@@ -1,14 +1,11 @@
 import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreatePrescriptionDto {
-  @IsInt()
+  @IsNumber()
   patientId: number;
 
   @IsNumber()
-  patientLat: number;
-
-  @IsNumber()
-  patientLng: number;
+  pharmacyId: number;
 
   file: any;
 

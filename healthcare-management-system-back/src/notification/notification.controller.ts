@@ -31,6 +31,12 @@ export class NotificationController {
     return this.service.findOne(id);
   }
 
+  //notification for userid
+  @Get('user/:userId')
+  findByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.service.findByUserId(userId);
+  }
+
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,

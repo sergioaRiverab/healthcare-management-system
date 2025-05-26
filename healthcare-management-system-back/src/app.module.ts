@@ -3,7 +3,6 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
-import { UserModule } from './user/user.module';
 import { PatientModule } from './patient/patient.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -15,6 +14,7 @@ import { PrescriptionModule } from './prescription/prescription.module';
 import { PrescriptionItemModule } from './prescription-item/prescription-item.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { NotificationModule } from './notification/notification.module';
+import { UserModule } from './user/user.module';
 
 
 @Module({

@@ -21,6 +21,12 @@ export class PrescriptionItemController {
     return this.service.create(dto);
   }
 
+  //crear varios prescription-items
+@Post('bulk')
+createBulk(@Body() body: { items: CreatePrescriptionItemDto[] }) {
+  return this.service.createBulk(body.items);
+}
+
   @Get()
   findAll() {
     return this.service.findAll();
@@ -30,6 +36,15 @@ export class PrescriptionItemController {
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.service.findOne(id);
   }
+
+    //Obtiene los ítems de una prescripción
+  @Get('prescription/:prescriptionId')
+  findByPrescription(
+    @Param('prescriptionId', ParseIntPipe) prescriptionId: number,
+  ) {
+    return this.service.findByPrescription(prescriptionId);
+  }
+
 
   @Patch(':id')
   update(

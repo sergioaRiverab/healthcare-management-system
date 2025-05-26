@@ -43,4 +43,10 @@ export class AppointmentController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.service.remove(id);
   }
+
+  //appointments de un patient especifico
+  @Get('patient/:id')
+  findAllByPatient(@Param('id', ParseIntPipe) id: number) {
+    return this.service.findAllByPatient(id);
+  }
 }

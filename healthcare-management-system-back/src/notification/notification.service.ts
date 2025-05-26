@@ -21,6 +21,10 @@ export class NotificationService {
     return notif;
   }
 
+  async findByUserId(userId: number) {
+    return this.prisma.notification.findMany({ where: { userId } });
+  }
+
   async update(id: number, dto: UpdateNotificationDto) {
     await this.findOne(id);
     return this.prisma.notification.update({ where: { id }, data: dto });
