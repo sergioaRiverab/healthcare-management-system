@@ -16,6 +16,8 @@ import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 export class AppointmentController {
   constructor(private readonly service: AppointmentService) {}
 
+
+
   @Post()
   create(@Body() dto: CreateAppointmentDto) {
     return this.service.create(dto);
@@ -26,11 +28,37 @@ export class AppointmentController {
     return this.service.findAll();
   }
 
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.service.findOne(id);
   }
 
+    @Get('patient/:id')
+  findAllByPatient(@Param('id', ParseIntPipe) id: number) {
+    return this.service.findAllByPatient(id);
+  }
+
+
+    @Get('patient/:userId')
+  findAllByPatientAppoinment(@Param('userId', ParseIntPipe) id: number) {
+    return this.service.findAllByPatient(id);
+  }
+    @Get('pharmacy/:id')
+  findAllByPharmacyAppoinment(@Param('id', ParseIntPipe) id: number) {
+    return this.service.findAllByPharmacyAppoinment(id);
+  }
+
+
+  //cancel appointment
+  @Patch('cancel/:id')
+  cancelAppointment(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateAppointmentDto,
+  ) {
+    return this.service.cancelAppointment(id, dto);
+  }
+  
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -45,8 +73,5 @@ export class AppointmentController {
   }
 
   //appointments de un patient especifico
-  @Get('patient/:id')
-  findAllByPatient(@Param('id', ParseIntPipe) id: number) {
-    return this.service.findAllByPatient(id);
-  }
+
 }

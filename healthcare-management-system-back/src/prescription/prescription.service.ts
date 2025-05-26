@@ -14,7 +14,8 @@ export class PrescriptionService {
 
   /** Create with nearest pharmacy flow */
   async create(dto: CreatePrescriptionDto) {
-    const { patientId, pharmacyId, file } = dto;
+    // renombramos pacienteId → patientUserId para mayor claridad
+    const { patientId: patientUserId, pharmacyId, file } = dto;
 
     // 1) Verificar que la farmacia exista y obtener su userId
     const pharmacy = await this.prisma.pharmacy.findUnique({
@@ -25,24 +26,24 @@ export class PrescriptionService {
       throw new NotFoundException(`Farmacia con id ${pharmacyId} no encontrada.`);
     }
 
-    // 2) Verificar que el paciente exista y obtener su userId
+    // 2) Verificar que el paciente exista y obtener su PK (id) y su userId
     const patient = await this.prisma.patient.findUnique({
-      where: { userId: patientId },
-      select: { userId: true },
+      where: { userId: patientUserId },
+      select: { id: true, userId: true },
     });
     if (!patient) {
-      throw new NotFoundException(`Paciente con id ${patientId} no encontrado.`);
+      throw new NotFoundException(`Paciente con userId ${patientUserId} no encontrado.`);
     }
 
     // 3) Subir el PDF a B2
-    const key = `prescriptions/presc-${patientId}-${Date.now()}.pdf`;
+    const key = `prescriptions/presc-${patientUserId}-${Date.now()}.pdf`;
     const fileUrl = await this.b2.uploadFile(file.buffer, key);
 
-    // 4) Crear la prescripción
+    // 4) Crear la prescripción usando patient.id (PK)
     const prescription = await this.prisma.prescription.create({
       data: {
-        patientId,
-        pharmacyId,
+        patientId:  patient.id,   // ← aquí usamos la PK
+        pharmacyId,               // ya viene correcto
         fileUrl,
       },
       include: {
@@ -55,8 +56,8 @@ export class PrescriptionService {
     // 5) Notificación a la farmacia
     await this.prisma.notification.create({
       data: {
-        userId: pharmacy.userId,
-        type:   NotificationType.PRESCRIPTION_UPDATED,
+        userId:  pharmacy.userId,
+        type:    NotificationType.PRESCRIPTION_UPDATED,
         message: `Nueva prescripción #${prescription.id} recibida.`,
       },
     });
@@ -64,14 +65,15 @@ export class PrescriptionService {
     // 6) Notificación al paciente
     await this.prisma.notification.create({
       data: {
-        userId: patient.userId,
-        type:   NotificationType.PRESCRIPTION_UPDATED,
+        userId:  patient.userId,
+        type:    NotificationType.PRESCRIPTION_UPDATED,
         message: `Tu prescripción #${prescription.id} ha sido enviada a la farmacia.`,
       },
     });
 
     return prescription;
   }
+
 
   findAll() {
     return this.prisma.prescription.findMany();

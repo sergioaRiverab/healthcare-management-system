@@ -10,7 +10,8 @@ export class CreateAppointmentDto {
   pharmacyId: number;
 
   @IsInt()
-  prescriptionId: number;     
+  @IsOptional()
+  prescriptionId?: number;     
 
   @IsDateString()
   date: string;

@@ -55,6 +55,7 @@ export class PrescriptionController {
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.prescriptionService.findOne(id);
   }
+  
   @Get('by-user/:userId')
   findByPharmacyUser(
     @Param('userId', ParseIntPipe) userId: number,
