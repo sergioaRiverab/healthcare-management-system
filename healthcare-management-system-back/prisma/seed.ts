@@ -131,10 +131,11 @@ async function main() {
     patients.map((p, i) =>
       prisma.appointment.create({
         data: {
-          patientId:  p.id,
-          pharmacyId: pharmacies[i].id,
-          date:       new Date(Date.now() + (i+1)*24*60*60*1000),
-          status:     AppointmentStatus.PENDING
+          patientId:      p.id,
+          pharmacyId:     pharmacies[i].id,
+          prescriptionId: prescriptions[i].id,             // ← nueva línea
+          date:           new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000),
+          status:         AppointmentStatus.PENDING
         }
       })
     )

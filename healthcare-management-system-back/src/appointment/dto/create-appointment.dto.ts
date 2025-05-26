@@ -1,4 +1,5 @@
-import { IsInt, IsDateString, IsEnum, IsOptional } from 'class-validator';
+// src/appointments/dto/create-appointment.dto.ts
+import { IsInt, IsDateString, IsOptional, IsEnum } from 'class-validator';
 import { AppointmentStatus } from '@prisma/client';
 
 export class CreateAppointmentDto {
@@ -8,11 +9,13 @@ export class CreateAppointmentDto {
   @IsInt()
   pharmacyId: number;
 
+  @IsInt()
+  prescriptionId: number;     
+
   @IsDateString()
   date: string;
 
-
-  @IsOptional()
   @IsEnum(AppointmentStatus)
+  @IsOptional()
   status?: AppointmentStatus;
 }

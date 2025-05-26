@@ -77,8 +77,21 @@ export class PrescriptionService {
     return this.prisma.prescription.findMany();
   }
 
+  //con patient y pharmacy
   findOne(id: number) {
-    return this.prisma.prescription.findUnique({ where: { id } });
+    const prescription = this.prisma.prescription.findUnique({
+      where: { id },
+      include: {
+        patient:  true,
+        pharmacy: true,
+        items:    true,
+      },
+    });
+
+    if (!prescription) {
+      throw new NotFoundException(`Prescripción con id ${id} no encontrada.`);
+    }
+    return prescription;
   }
 
   async findByPharmacyUser(userId: number) {

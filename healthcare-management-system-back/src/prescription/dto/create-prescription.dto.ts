@@ -1,5 +1,11 @@
-import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
-
+import {
+  IsInt,
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsArray,
+  IsNumber,
+} from 'class-validator';
 export class CreatePrescriptionDto {
   @IsNumber()
   patientId: number;
@@ -8,5 +14,7 @@ export class CreatePrescriptionDto {
   pharmacyId: number;
 
   file: any;
+
+
 
 }
