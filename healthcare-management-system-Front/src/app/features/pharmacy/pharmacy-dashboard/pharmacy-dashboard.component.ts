@@ -11,6 +11,7 @@ import {
 import { AuthService }                           from '../../../core/services/auth.service';
 import { PrescriptionService }                   from '../../../core/services/prescription.service';
 import { PrescriptionItemService }               from '../../../core/services/prescription-item.service';
+import { AppointmentService } from '../../../core/services/appoinments.service';
 import { ViewItemsModalComponent, PrescriptionItemView }
   from '../view-items-modal/view-items-modal.component';
 import { CreateAppointmentModalComponent }
@@ -95,7 +96,8 @@ export class PharmacyDashboardComponent {
   constructor(
     private auth: AuthService,
     private prescSvc: PrescriptionService,
-    private itemSvc: PrescriptionItemService
+    private itemSvc: PrescriptionItemService,
+    private appintSvc: AppointmentService
   ) {}
 
   // === Add Medication ===
@@ -147,12 +149,46 @@ openItemsModal(p: Prescription) {
   // === Create Appointment ===
   openCreateModalFn(p: Prescription) {
     this.selectedPrescription = p;
+    this.prescSvc.getPrescriptionById(p.id).subscribe(prescription => {
+      this.selectedPrescription = {
+        ...this.selectedPrescription,
+        patientName: prescription.patient.username,
+        patientEmail: prescription.patient.email,
+        requestDate: new Date(prescription.createdAt),
+        documentUrl: prescription.fileUrl,
+        patientId: prescription.patientId,
+        pharmacyId: prescription.pharmacyId,
+      };
+    }
+    );
+
     this.showCreateModal = true;
+
   }
   onCreateAppointment(d: Date) {
     console.log('Crear cita para', this.selectedPrescription, 'en', d);
+    // Aquí llamamos al servicio de citas
+    this.appintSvc.createAppointment(
+      this.selectedPrescription.patientId!,
+      this.selectedPrescription.pharmacyId!,
+      d
+    ).subscribe({
+      next: () => {
+        alert('Cita creada correctamente');
+      },
+      error: (err: any) => {
+        console.error('Error al crear cita:', err);
+        alert('Error al crear cita');
+      }
+    });
+
     this.showCreateModal = false;
   }
+
+  onCreateModalClose() {
+  this.showCreateModal = false;
+}
+
 
   // === Confirm Delivery ===
   confirmDelivery(p: Prescription) {

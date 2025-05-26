@@ -9,6 +9,8 @@ export interface Prescription {
   patientEmail:  string;
   requestDate:   Date;
   documentUrl:   string;
+  patientId?:   number;
+  pharmacyId?: number;
 }
 
 export interface TableAction {

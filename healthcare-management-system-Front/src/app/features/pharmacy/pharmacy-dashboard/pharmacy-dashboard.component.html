@@ -39,6 +39,7 @@
 
 <app-create-appointment-modal
   [visible]="showCreateModal"
-  (close)="showCreateModal = false"
+  (close)="onCreateModalClose()"
   (save)="onCreateAppointment($event)"
 ></app-create-appointment-modal>
+

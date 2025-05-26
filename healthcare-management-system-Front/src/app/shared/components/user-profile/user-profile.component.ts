@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/User.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,8 +17,10 @@ export class UserProfileComponent implements OnInit {
   isDropdownOpen = false;
   isEditProfileModalOpen = false;
   editProfileForm: FormGroup;
+  //router
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.editProfileForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -37,6 +40,7 @@ export class UserProfileComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/']);
     this.isDropdownOpen = false;
   }
 

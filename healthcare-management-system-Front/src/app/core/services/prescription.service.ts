@@ -1,4 +1,3 @@
-// src/core/services/prescription.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -27,6 +26,11 @@ export class PrescriptionService {
   //get prescriptions
   getPrescriptions(patientId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/patient/${patientId}`);
+  }
+
+  //get prescription id
+  getPrescriptionById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
 
   findByPharmacyUser(userId:number): Observable<any> {

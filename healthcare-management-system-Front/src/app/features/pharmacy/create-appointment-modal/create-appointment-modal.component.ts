@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule }                          from '@angular/common';
 import { FormsModule }                           from '@angular/forms';
 
@@ -15,6 +15,12 @@ export class CreateAppointmentModalComponent {
 
   dateTime = ''; // enlazado a <input type="datetime-local">
 
+    ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible']?.currentValue === true) {
+      // Resetear el campo al abrir el modal
+      this.dateTime = '';
+    }
+  }
   onSave() {
     if (this.dateTime) {
       this.save.emit(new Date(this.dateTime));
