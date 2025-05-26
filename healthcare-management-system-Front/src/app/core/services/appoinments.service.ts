@@ -17,16 +17,35 @@ export class AppointmentService {
     createAppointment(
         patientId: number,
         pharmacyId: number,
-        date: Date
+        date: Date,
+        prescriptionId?: number
     ): Observable<any> {
         const body = {
         patientId,
         pharmacyId,
-        date
+        date,
+        prescriptionId
         };
         return this.http.post(this.baseUrl, body);
     }
 
+
+    //get appointments by pharmacy user
+    getAppointmentsByPharmacyUser(userId: number): Observable<any[]> {
+        console.log(`Fetching appointments for pharmacy user with ID: ${userId}`);
+        return this.http.get<any[]>(`${this.baseUrl}/pharmacy/${userId}`);
+    }
+
+    //get appointments by patient user
+    getAppointmentsByPatientUser(userId: number): Observable<any[]> {
+        return this.http.get<any[]>(`${this.baseUrl}/patient/${userId}`);
+    }
+
+
+    //cancel Appointment
+    cancelAppointment(appointmentId: number): Observable<any> {
+        return this.http.delete(`${this.baseUrl}/${appointmentId}`);
+    }
 
 
 

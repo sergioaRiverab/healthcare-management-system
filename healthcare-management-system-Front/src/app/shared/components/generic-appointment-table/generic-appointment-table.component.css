@@ -1,0 +1,14 @@
+table.mat-table {
+  width: 100%;
+}
+
+.mat-header-cell, .mat-cell {
+  padding: 8px;
+  text-align: left;
+}
+
+button.mat-button {
+  margin-top: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+}

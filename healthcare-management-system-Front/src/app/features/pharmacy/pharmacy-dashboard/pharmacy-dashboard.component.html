@@ -22,6 +22,22 @@
       [actions]="apptActions"
     ></app-generic-prescription-table>
   </mat-tab>
+
+  <mat-tab label="Historial">
+    <app-notifications></app-notifications>
+  </mat-tab>
+
+  
+  <mat-tab label="Appointments">
+    <app-generic-appointment-table
+      [fetchFn]="fetchAppointmentsFn"
+      [mapFn]="mapAppointmentsFn"
+      [actions]="appointmentActions"
+    ></app-generic-appointment-table>
+  </mat-tab>
+  
+
+
 </mat-tab-group>
 
 <!-- Modales -->

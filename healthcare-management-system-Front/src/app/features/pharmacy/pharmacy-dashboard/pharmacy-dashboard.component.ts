@@ -18,6 +18,15 @@ import { CreateAppointmentModalComponent }
   from '../create-appointment-modal/create-appointment-modal.component';
 import { AddMedicationModalComponent }
   from '../add-medication-modal/add-medication-modal.component';
+import { NotificationsComponent } from '../../patient/notifications/notifications.component';
+import { GenericAppointmentTableComponent } from '../../../shared/components/generic-appointment-table/generic-appointment-table.component';
+
+// Define ApptAction interface if not imported from elsewhere
+export interface ApptAction<T> {
+  label: string;
+  callback: (item: T) => void;
+  class?: string;
+}
 
 @Component({
   selector: 'app-pharmacy-dashboard',
@@ -28,7 +37,9 @@ import { AddMedicationModalComponent }
     GenericPrescriptionTableComponent,
     ViewItemsModalComponent,
     CreateAppointmentModalComponent,
-    AddMedicationModalComponent
+    AddMedicationModalComponent,
+    NotificationsComponent,
+    GenericAppointmentTableComponent,
   ],
   templateUrl: './pharmacy-dashboard.component.html',
 })
@@ -48,6 +59,9 @@ export class PharmacyDashboardComponent {
       take(1),
       switchMap(u => this.prescSvc.findByPharmacyUser(u!.id))
     );
+
+    
+    
 
   // Mapeo de la respuesta Cruda a nuestro modelo
   mapFn = (p: any): Prescription => ({
@@ -162,6 +176,7 @@ openItemsModal(p: Prescription) {
     }
     );
 
+    console.log("selected preeeee",this.selectedPrescription)
     this.showCreateModal = true;
 
   }
@@ -171,7 +186,8 @@ openItemsModal(p: Prescription) {
     this.appintSvc.createAppointment(
       this.selectedPrescription.patientId!,
       this.selectedPrescription.pharmacyId!,
-      d
+      d,
+      this.selectedPrescription.id
     ).subscribe({
       next: () => {
         alert('Cita creada correctamente');
@@ -189,6 +205,36 @@ openItemsModal(p: Prescription) {
   this.showCreateModal = false;
 }
 
+
+
+fetchAppointmentsFn = () =>
+    this.auth.user$.pipe(
+      take(1),
+      switchMap(u => this.appintSvc.getAppointmentsByPharmacyUser(u!.id))
+    );
+
+mapAppointmentsFn = (a: any) => ({
+  id: a.id,
+  date: new Date(a.date),
+  status: a.status,
+});
+
+  appointmentActions: ApptAction<any>[] = [
+    {
+      label: 'View Prescription',
+      callback: a => this.openItemsModal(a.prescription),
+      class: 'px-3 py-1 bg-blue-600 text-white rounded'
+    },
+    {
+      label: 'Cancel',
+      callback: a => this.appintSvc.cancelAppointment(a.id).subscribe(() => {
+          alert('Cita cancelada');
+          // opcional: recargar lista
+          this.fetchAppointmentsFn().subscribe();
+        }),
+      class: 'px-3 py-1 bg-red-600 text-white rounded ml-2'
+    }
+  ];
 
   // === Confirm Delivery ===
   confirmDelivery(p: Prescription) {
