@@ -1,32 +1,86 @@
-<!-- src/app/prescription-upload/prescription-upload.component.html -->
-<div class="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-6">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Upload Prescription</h2>
+<!-- prescription-upload.component.html -->
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Subir Receta Médica</h2>
 
-  <input
-    type="file"
-    (change)="onFileSelected($event)"
-    accept="application/pdf"
-    class="block w-full text-sm text-gray-700
-           file:mr-4 file:py-2 file:px-4
-           file:rounded-md file:border file:border-gray-300
-           file:text-sm file:font-medium
-           file:bg-blue-50 file:text-blue-700
-           hover:file:bg-blue-100
-           mb-4"
-  />
+  <!-- Selector de Farmacia -->
+  <div class="mb-6">
+    <label for="pharmacySelect" class="block text-sm font-medium text-gray-700 mb-2">
+      Seleccionar Farmacia *
+    </label>
+    <select
+      id="pharmacySelect"
+      [value]="selectedPharmacy?.id || ''"
+      (change)="onPharmacySelected($event)"
+      class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+      [class.border-red-500]="!selectedPharmacy && uploadError"
+    >
+      <option value="">Selecciona una farmacia...</option>
+      <option *ngFor="let ph of nearbyPharmacies" [value]="ph.id">
+        {{ ph.name }} ({{ ph.distance.toFixed(2) }} km)
+      </option>
+    </select>
 
-  <!-- Mostrar nombre del archivo seleccionado -->
-  <p *ngIf="selectedFile" class="text-gray-600 mb-4">
-    Selected file: <span class="font-medium">{{ selectedFile.name }}</span>
-  </p>
+    <div *ngIf="selectedPharmacy" class="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+       {{ selectedPharmacy.name }} – {{ selectedPharmacy.distance.toFixed(2) }} km
+    </div>
+  </div>
 
+  <!-- Selector de Archivo -->
+  <div class="mb-6">
+    <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">
+      Archivo de Receta (PDF) *
+    </label>
+    <input
+      id="fileInput"
+      type="file"
+      accept=".pdf"
+      (change)="onFileSelected($event)"
+      class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+      [class.border-red-500]="!selectedFile && uploadError"
+    />
+    <div *ngIf="selectedFile" class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm flex justify-between items-center">
+      📄 {{ selectedFile.name }} ({{ (selectedFile.size/1024/1024).toFixed(2) }} MB)
+      <button type="button" (click)="removeFile()" class="text-red-600 hover:text-red-800 text-xs">✕ Quitar</button>
+    </div>
+  </div>
+
+  <!-- Mensajes de Estado -->
+  <div *ngIf="uploadError" class="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800">
+    ❌ {{ uploadError }}
+  </div>
+  <div *ngIf="uploadSuccess" class="mb-4 p-3 bg-green-50 border border-green-200 rounded text-sm text-green-800">
+     Receta subida exitosamente a {{ selectedPharmacy?.name }}
+  </div>
+
+  <!-- Botón de Subida -->
   <button
-    class="w-full bg-blue-600 hover:bg-blue-700
-           text-white font-medium py-2 px-4 rounded-md
-           disabled:opacity-50 disabled:cursor-not-allowed"
-    [disabled]="!selectedFile"
     (click)="upload()"
+    [disabled]="!canUpload()"
+    class="w-full py-3 rounded-md font-medium transition-colors duration-200"
+    [ngClass]="{
+      'bg-blue-600 hover:bg-blue-700 text-white': canUpload(),
+      'bg-gray-300 text-gray-500 cursor-not-allowed': !canUpload()
+    }"
   >
-    Upload
+    <span *ngIf="isUploading" class="flex items-center justify-center">
+      <svg class="animate-spin mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      Subiendo...
+    </span>
+    <span *ngIf="!isUploading">
+      {{ canUpload() ? 'Subir Receta' : 'Selecciona farmacia y archivo' }}
+    </span>
   </button>
+
+  <!-- Instrucciones -->
+  <div class="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-600">
+    <p class="font-semibold mb-1">📋 Instrucciones:</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Selecciona una farmacia de la lista</li>
+      <li>Sube tu receta médica en PDF</li>
+      <li>El archivo se enviará a la farmacia seleccionada</li>
+    </ul>
+  </div>
 </div>

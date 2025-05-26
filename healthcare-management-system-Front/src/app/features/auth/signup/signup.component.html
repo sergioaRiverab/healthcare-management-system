@@ -56,82 +56,52 @@
 
         <!-- Patient -->
         <div *ngIf="signUpForm.get('userType')?.value === 'Patient'" class="space-y-2">
-          <input type="date" formControlName="dob" class="w-full px-4 py-2 border rounded-lg" />
+          <input 
+            type="date" 
+            formControlName="dob" 
+            placeholder="Date of birth"
+            class="w-full px-4 py-2 border rounded-lg" 
+          />
           <div *ngIf="signUpForm.get('dob')?.touched && signUpForm.get('dob')?.invalid" class="text-red-500 text-sm">
             Date of birth is required.
-          </div>
-          <input
-            type="text"
-            formControlName="address"
-            placeholder="Address"
-            class="w-full px-4 py-2 border rounded-lg"
-          />
-          <div *ngIf="signUpForm.get('address')?.touched && signUpForm.get('address')?.invalid" class="text-red-500 text-sm">
-            Address is required.
           </div>
         </div>
 
         <!-- Pharmacy -->
         <div *ngIf="signUpForm.get('userType')?.value === 'Pharmacy'" class="space-y-2">
-          <input
-            type="text"
-            formControlName="pharmacyName"
-            placeholder="Nombre de la farmacia"
-            class="w-full px-4 py-2 border rounded-lg"
-          />
-          <div *ngIf="signUpForm.get('pharmacyName')?.touched && signUpForm.get('pharmacyName')?.invalid" class="text-red-500 text-sm">
-            Nombre es requerido.
+          <!-- Selector de ubicación -->
+          <app-location-selector
+            [initialLat]="signUpForm.get('lat')?.value"
+            [initialLng]="signUpForm.get('lng')?.value"
+            [initialAddress]="signUpForm.get('pharmacyAddress')?.value"
+            (locationSelected)="handleLocationSelected($event)"
+          ></app-location-selector>
+
+          <!-- Mensajes de error para ubicación -->
+          <div *ngIf="(signUpForm.get('lat')?.invalid || signUpForm.get('lng')?.invalid || signUpForm.get('pharmacyAddress')?.invalid) && (signUpForm.get('pharmacyAddress')?.touched || signUpForm.get('lat')?.touched)" class="text-red-500 text-sm bg-red-50 p-2 rounded">
+            <strong>⚠️ Ubicación requerida:</strong><br>
+            • Escribe tu dirección y presiona "Buscar"<br>
+            • Selecciona una opción de los resultados<br>
+            • O usa "Mi ubicación" para detectar automáticamente
           </div>
 
-          <input
-            type="text"
-            formControlName="pharmacyPhone"
-            placeholder="Teléfono de la farmacia"
-            class="w-full px-4 py-2 border rounded-lg"
-          />
-          <div *ngIf="signUpForm.get('pharmacyPhone')?.touched && signUpForm.get('pharmacyPhone')?.invalid" class="text-red-500 text-sm">
-            Teléfono inválido.
-          </div>
-
-          <!-- Autodetect + dirección -->
-          <div class="flex space-x-2">
-            <input
-              type="text"
-              formControlName="pharmacyAddress"
-              placeholder="Dirección de la farmacia"
-              class="flex-grow px-4 py-2 border rounded-lg"
-              readonly
-            />
-            <button
-              type="button"
-              (click)="detectLocation()"
-              class="px-3 py-2 bg-emerald-green text-white rounded-lg hover:bg-navy-blue"
-            >
-              Usar mi ubicación
-            </button>
-          </div>
-          <div *ngIf="signUpForm.get('pharmacyAddress')?.touched && signUpForm.get('pharmacyAddress')?.invalid" class="text-red-500 text-sm">
-            Dirección es requerida.
-          </div>
-
-          <!-- Mapa -->
-          <div *ngIf="signUpForm.get('lat')?.value" id="signupMap" class="h-48 rounded-lg overflow-hidden mb-4"></div>
-
-          <!-- ocultos -->
+          <!-- Campos ocultos para lat/lng -->
           <input type="hidden" formControlName="lat" />
           <input type="hidden" formControlName="lng" />
-
-          <!-- Mensaje de error instruccional -->
-          <div *ngIf="(signUpForm.get('lat')?.invalid || signUpForm.get('lng')?.invalid) && signUpForm.get('pharmacyAddress')?.touched" class="text-red-500 text-sm">
-            Necesitas fijar tu posición: pulsa “Usar mi ubicación”.
-          </div>
+          <input type="hidden" formControlName="pharmacyAddress" />
         </div>
 
         <!-- Contraseña y términos -->
-        <input type="password" formControlName="password" placeholder="Password" class="w-full px-4 py-2 border rounded-lg" />
+        <input 
+          type="password" 
+          formControlName="password" 
+          placeholder="Password" 
+          class="w-full px-4 py-2 border rounded-lg" 
+        />
         <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid" class="text-red-500 text-sm">
-          Password inválido.
+          Password must contain at least 8 characters, including uppercase, lowercase, number and special character.
         </div>
+        
         <div class="flex items-center space-x-2">
           <input type="checkbox" formControlName="terms" />
           <label>Acepto términos & policy</label>
@@ -140,7 +110,26 @@
           Debes aceptar los términos.
         </div>
 
-        <button type="submit" class="w-full py-2 bg-emerald-green text-white rounded-lg">
+        <!-- Debug info (remove in production) -->
+        <div class="text-xs text-gray-500 bg-gray-50 p-2 rounded" *ngIf="false">
+          <strong>Debug:</strong> Form valid: {{ signUpForm.valid }}<br>
+          User type: {{ signUpForm.get('userType')?.value }}<br>
+          <span *ngIf="signUpForm.get('userType')?.value === 'Patient'">
+            DOB: {{ signUpForm.get('dob')?.value }}
+          </span>
+          <span *ngIf="signUpForm.get('userType')?.value === 'Pharmacy'">
+            Address: {{ signUpForm.get('pharmacyAddress')?.value }}<br>
+            Lat: {{ signUpForm.get('lat')?.value }}, Lng: {{ signUpForm.get('lng')?.value }}
+          </span>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-2 bg-emerald-green text-white rounded-lg hover:bg-emerald-700 transition-colors"
+          [disabled]="signUpForm.invalid"
+          [class.opacity-50]="signUpForm.invalid"
+          [class.cursor-not-allowed]="signUpForm.invalid"
+        >
           Signup
         </button>
       </form>

@@ -1,27 +1,50 @@
-.appointments-container {
-    display: flex;
-    gap: 16px;
-  }
-  .map {
-    flex: 2;
-    height: 400px;
-  }
-  .list {
-    flex: 1;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  .list ul {
-    list-style: none;
-    padding: 0;
-  }
-  .list li {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .list li.selected {
-    background: #e7f3ff;
-  }
+#map {
+  height: 400px;
+  min-height: 300px;
+}
+
+.pharmacy-card {
+  transition: all 0.2s ease;
+}
+
+.pharmacy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.selected-pharmacy {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+/* Estilos para los botones de farmacia */
+button[type="button"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button[type="button"]:active {
+  transform: translateY(0);
+}
+
+button[type="button"]:focus {
+  outline: none;
+}
+
+/* Estilos para los popups del mapa */
+.leaflet-popup-content {
+  margin: 8px 12px;
+  line-height: 1.4;
+}
+
+.leaflet-popup-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.leaflet-popup-content p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+

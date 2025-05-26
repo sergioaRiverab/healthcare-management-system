@@ -1,16 +1,29 @@
-.upload-prescription {
-  max-width: 400px;
-  margin: 2rem auto;
-  text-align: center;
+/* Estilos adicionales si necesitas personalización específica */
+.file-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
 }
-.upload-prescription input {
-  display: block;
-  margin: 1rem auto;
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  left: -9999px;
 }
-.upload-prescription button {
-  padding: 0.5rem 1rem;
+
+.upload-progress {
+  transition: all 0.3s ease;
 }
-.upload-prescription img {
-  max-width: 100%;
-  height: auto;
+
+/* Animación para el spinner */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }

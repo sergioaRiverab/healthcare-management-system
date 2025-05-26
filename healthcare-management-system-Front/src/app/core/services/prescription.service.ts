@@ -14,15 +14,24 @@ export class PrescriptionService {
 
   uploadPrescription(
     patientId: number,
-    patientLat: number,
-    patientLng: number,
+    pharmacyId: number,
     file: File
   ): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('patientId', patientId.toString());
-    formData.append('patientLat', patientLat.toString());
-    formData.append('patientLng', patientLng.toString());
+    formData.append('pharmacyId', pharmacyId.toString());
     return this.http.post(this.baseUrl, formData);
   }
+
+  //get prescriptions
+  getPrescriptions(patientId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/patient/${patientId}`);
+  }
+
+  findByPharmacyUser(userId:number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/by-user/${userId}`);
+  }
+
+
 }

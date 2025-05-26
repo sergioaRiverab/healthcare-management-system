@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
-      this.user = user;
+      this.user = user ?? null;
     });
   }
 
@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit {
       this.authService.editProfile(updatedData).subscribe({
         next: (response) => {
           alert(response.message || 'Profile updated successfully');
-          this.authService.loadUser(); // Refresh the user data after update
+          this.authService.reloadUser();
           this.closeEditProfileModal();
         },
         error: (err) => {

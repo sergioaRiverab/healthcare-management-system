@@ -1,0 +1,44 @@
+<div *ngIf="visible" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+    <h2 class="text-2xl font-bold mb-4">Prescription Items</h2>
+
+    <div *ngIf="items.length; else noItems">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left">Medication</th>
+            <th class="px-4 py-2 text-left">Quantity</th>
+            <th class="px-4 py-2 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let it of items" class="border-b">
+            <td class="px-4 py-2">{{ it.medicationName }}</td>
+            <td class="px-4 py-2">{{ it.quantity }}</td>
+            <td class="px-4 py-2 capitalize">
+              <span
+                [ngClass]="{
+                  'text-yellow-600': it.status === 'PENDING',
+                  'text-green-600': it.status === 'ACCEPTED',
+                  'text-red-600': it.status === 'REJECTED',
+                  'text-blue-600': it.status === 'BACKORDERED'
+                }">
+                {{ it.status.toLowerCase() }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noItems>
+      <p class="text-gray-500">No items found.</p>
+    </ng-template>
+
+    <div class="mt-6 text-right">
+      <button (click)="close.emit()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<mat-tab-group>
+  <mat-tab label="Prescripciones">
+    <app-generic-prescription-table
+      [fetchFn]="fetchFn"
+      [mapFn]="mapFn"
+      [actions]="prescActions"
+    ></app-generic-prescription-table>
+  </mat-tab>
+
+  <mat-tab label="Medicamentos">
+    <app-generic-prescription-table
+      [fetchFn]="fetchFn"
+      [mapFn]="mapFn"
+      [actions]="medActions"
+    ></app-generic-prescription-table>
+  </mat-tab>
+
+  <mat-tab label="Crear cita">
+    <app-generic-prescription-table
+      [fetchFn]="fetchFn"
+      [mapFn]="mapFn"
+      [actions]="apptActions"
+    ></app-generic-prescription-table>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- Modales -->
+<app-add-medication-modal
+  [visible]="showAddMedModal"
+  (close)="onAddMedClose()"
+  (save)="onAddMedSave($event)"
+></app-add-medication-modal>
+
+<app-view-items-modal
+  [visible]="showItemsModal"
+  [items]="itemsToShow"
+  (close)="showItemsModal = false"
+></app-view-items-modal>
+
+<app-create-appointment-modal
+  [visible]="showCreateModal"
+  (close)="showCreateModal = false"
+  (save)="onCreateAppointment($event)"
+></app-create-appointment-modal>

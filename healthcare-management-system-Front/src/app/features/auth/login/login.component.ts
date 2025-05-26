@@ -1,3 +1,4 @@
+// login.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
@@ -19,13 +20,21 @@ export class LoginComponent {
   resetPasswordForm: FormGroup;
   isAuthenticated = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  // Nueva propiedad para mostrar/ocultar contraseña
+  showPassword = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
         Validators.required,
         Validators.maxLength(20),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)]],
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)
+      ]],
       rememberMe: [false]
     });
 
@@ -33,11 +42,13 @@ export class LoginComponent {
       oldPassword: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)]],
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)
+      ]],
       newPassword: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)]],
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/)
+      ]]
     });
 
     this.resetPasswordForm = this.fb.group({
@@ -55,15 +66,20 @@ export class LoginComponent {
     });
   }
 
+  // Alterna la visibilidad de la contraseña
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit(): void {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
       formData.email = formData.email.toLowerCase();
-      console.log("EMAIL: ",formData.email, " PASSWORD: ",formData.password)
+      console.log("EMAIL: ", formData.email, " PASSWORD: ", formData.password);
       this.authService.login(formData.email, formData.password).subscribe({
         next: () => {
           alert('Inicio de sesión exitoso');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         },
         error: (err: Error) => {
           console.error('Error en el inicio de sesión:', err.message);
@@ -94,22 +110,20 @@ export class LoginComponent {
       this.closeChangePasswordModal();
       return;
     }
-
     if (this.changePasswordForm.valid) {
       const { oldPassword, newPassword } = this.changePasswordForm.value;
-      
       this.authService.changePassword({ oldPassword, newPassword }).subscribe({
         next: () => {
           alert('Contraseña cambiada exitosamente');
           this.closeChangePasswordModal();
         },
-        error: (err) => {
+        error: err => {
           console.error('Error al cambiar la contraseña:', err);
           if (err.message.includes('No autorizado')) {
             this.router.navigate(['/auth/login']);
           }
           alert(err.message || 'Error al cambiar la contraseña');
-        },
+        }
       });
     } else {
       alert('Por favor, complete todos los campos correctamente');
@@ -125,24 +139,5 @@ export class LoginComponent {
   closeResetPasswordModal() {
     this.isResetPasswordModalOpen = false;
     this.resetPasswordForm.reset();
-  }
-
-  onResetPassword() {
-    if (this.resetPasswordForm.valid) {
-      const { email, newPassword } = this.resetPasswordForm.value;
-      
-      this.authService.resetPassword({ email, newPassword }).subscribe({
-        next: () => {
-          alert('Contraseña restablecida exitosamente');
-          this.closeResetPasswordModal();
-        },
-        error: (err) => {
-          console.error('Error al restablecer la contraseña:', err);
-          alert(err.message || 'Error al restablecer la contraseña');
-        },
-      });
-    } else {
-      alert('Por favor, complete todos los campos correctamente');
-    }
   }
 }

@@ -1,0 +1,50 @@
+<!-- src/app/features/generic-prescription-table.component.html -->
+<div *ngIf="isLoading" class="p-4 text-center text-gray-500">Loading…</div>
+<div *ngIf="error"     class="p-4 text-center text-red-500">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error" class="overflow-x-auto">
+  <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Patient</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Request Date</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Email</th>
+        <!-- Una columna por cada action -->
+        <th *ngFor="let act of actions" class="px-6 py-3"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of prescriptions" class="border-b hover:bg-gray-50 transition">
+        <td class="px-6 py-4">{{ p.patientName }}</td>
+        <td class="px-6 py-4">{{ p.requestDate | date:'mediumDate' }}</td>
+        <td class="px-6 py-4">{{ p.patientEmail }}</td>
+
+        <!-- Renderizamos cada acción -->
+        <td *ngFor="let act of actions" class="px-6 py-4 text-right">
+          <!-- <a> si hay hrefFn -->
+          <a *ngIf="act.hrefFn"
+             [href]="act.hrefFn(p)"
+             [target]="act.openInNewTab ? '_blank' : null"
+             class="{{ act.class || '' }}"
+             rel="noopener noreferrer"
+          >
+            {{ act.label }}
+          </a>
+          <!-- <button> si hay callback -->
+          <button *ngIf="act.callback"
+                  (click)="act.callback!(p)"
+                  class="{{ act.class || '' }}"
+          >
+            {{ act.label }}
+          </button>
+        </td>
+      </tr>
+
+      <tr *ngIf="prescriptions.length === 0">
+        <td [attr.colspan]="3 + actions.length" class="px-6 py-4 text-center text-gray-500">
+          No records found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

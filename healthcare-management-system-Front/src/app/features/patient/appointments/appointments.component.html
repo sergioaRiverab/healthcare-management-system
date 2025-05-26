@@ -1,31 +1,43 @@
-<div class="bg-white shadow-lg rounded-lg p-6 w-full">
-  <div
-    id="map"
-    class="w-full h-[400px] rounded-md overflow-hidden mb-6"
-  ></div>
+<!-- appointments.component.html -->
+<div class="w-full h-full">
+  <div class="mb-4 p-4 bg-blue-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-blue-800 mb-2">
+      Farmacias Cercanas
+    </h3>
+    <p class="text-sm text-blue-600">
+      Selecciona una farmacia para ver su ubicación destacada.
+    </p>
+    <div *ngIf="selectedPharmacy" class="mt-2 p-2 bg-green-100 rounded border-l-4 border-green-500">
+      <p class="text-green-800 font-medium">
+        ✅ {{ selectedPharmacy.name }}
+      </p>
+      <p class="text-green-600 text-sm">
+        {{ selectedPharmacy.distance.toFixed(2) }} km
+      </p>
+    </div>
+  </div>
 
-  <div class="mt-4">
-    <h3 class="text-xl font-semibold text-gray-800 mb-4">Farmacias Cercanas</h3>
-    <ul class="space-y-3">
-      @for (pharm of pharmacies; track pharm.id) {
-        <li
-          [class.selected]="pharm.id === selectedId"
-          class="flex justify-between items-center p-4 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <div class="text-gray-700">
-            <strong class="font-medium">{{ pharm.name }}</strong>
-             – <span class="font-light">{{ pharm.distance | number:'1.2-2' }} km</span>
-          </div>
-          <button
-            (click)="onSelect(pharm.id)"
-            class="ml-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-md"
-          >
-            Seleccionar
-          </button>
-        </li>
-      } @empty {
-        <li class="text-gray-600 italic">No hay farmacias cercanas.</li>
-      }
-    </ul>
+  <div id="map" class="w-full h-96 md:h-[500px] rounded-lg shadow-lg border"></div>
+
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <button
+      *ngFor="let ph of pharmacies"
+      type="button"
+      class="p-3 border rounded-lg hover:bg-gray-50 transition-all duration-200 text-left w-full"
+      [class.bg-green-50]="selectedPharmacy?.id === ph.id"
+      [class.border-green-500]="selectedPharmacy?.id === ph.id"
+      (click)="selectPharmacy(ph)"
+    >
+      <h4 class="font-medium text-gray-900">{{ ph.name }}</h4>
+      <p class="text-sm text-gray-600 mt-1">
+        {{ ph.distance.toFixed(2) }} km
+      </p>
+      <span
+        *ngIf="selectedPharmacy?.id === ph.id"
+        class="inline-block mt-2 px-2 py-1 bg-green-500 text-white text-xs rounded font-medium"
+      >
+        Seleccionada
+      </span>
+    </button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="relative">
+<div class="relative z-30">
   <button 
     (click)="toggleDropdown()"
     class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-green text-white hover:bg-navy-blue transition duration-300"
@@ -58,7 +58,7 @@
   }
 </div>
 
-<div *ngIf="isEditProfileModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+<div *ngIf="isEditProfileModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
   <div class="bg-white p-8 rounded-xl shadow-lg w-[480px]">
     <h2 class="text-3xl font-bold text-emerald-green mb-6 text-center font-['Montserrat']">Edit Profile</h2>
     <form [formGroup]="editProfileForm" (ngSubmit)="onEditProfileSubmit()" class="space-y-4">
