@@ -16,4 +16,14 @@
       (pharmacySelected)="selectedPharmacy = $event"
     ></app-appointments>
   </div>
+    
+  <div class="mt-6">
+      <h3 class="text-xl font-bold">Mis Citas</h3>
+      <app-generic-appointment-table
+        [fetchFn]="fetchAppointmentsFn"  
+        [mapFn]="mapAppointmentsFn"     
+        [actions]="appointmentActions" 
+      ></app-generic-appointment-table>
+    </div>
+  
 </div>
